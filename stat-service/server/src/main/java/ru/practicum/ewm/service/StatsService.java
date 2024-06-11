@@ -2,12 +2,12 @@ package ru.practicum.ewm.service;
 
 import ru.practicum.ewm.EndpointHit;
 import ru.practicum.ewm.ViewStats;
-import ru.practicum.ewm.ViewsStatsRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsService {
-    void saveHit(EndpointHit hit);
+    EndpointHit saveHit(EndpointHit hit);
 
-    List<ViewStats> getViewStatsList(ViewsStatsRequest request);
+    List<ViewStats> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
 }

@@ -5,14 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.EndpointHit;
 import ru.practicum.ewm.ViewStats;
-import ru.practicum.ewm.ViewsStatsRequest;
+import ru.practicum.ewm.exceptions.NoValidDataParams;
 import ru.practicum.ewm.service.StatsService;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -35,16 +40,9 @@ public class StatsController {
                                     @RequestParam(required = false) List<String> uris,
                                     @RequestParam(defaultValue = "false") boolean unique) {
         log.info("GET request to get all statistic.");
-        if (uris == null) {
-            uris = Collections.emptyList();
+        if (start.isAfter(end)) {
+            throw new NoValidDataParams("Start params is after end params");
         }
-        return service.getViewStatsList(
-                ViewsStatsRequest.builder()
-                        .start(start)
-                        .end(end)
-                        .uris(uris)
-                        .unique(unique)
-                        .build()
-        );
+        return service.getViewStatsList(start, end, uris, unique);
     }
 }
