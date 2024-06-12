@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +15,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class StatsClient extends BaseClient {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Value("${server.application.name:ewm-main-service}")
     private String applicationName;
 
-    public StatsClient(@Value("${server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${STAT_SERVER_URL}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
