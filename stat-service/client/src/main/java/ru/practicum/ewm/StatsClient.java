@@ -1,13 +1,13 @@
 package ru.practicum.ewm;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,7 +15,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class StatsClient {
 
+    @Autowired
     private final WebClient webClient;
+
     private final ResourceBundle resource = ResourceBundle.getBundle("messages");
 
     public EndpointHit saveHit(EndpointHit endpointHit) {
