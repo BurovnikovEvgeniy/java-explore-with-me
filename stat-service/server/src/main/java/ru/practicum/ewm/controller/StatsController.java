@@ -40,6 +40,9 @@ public class StatsController {
                                     @RequestParam(required = false) List<String> uris,
                                     @RequestParam(defaultValue = "false") boolean unique) {
         log.info("GET request to get all statistic.");
+        if (start == null || end == null) {
+            throw new NoValidDataParams("Start params OR end params is null");
+        }
         if (start.isAfter(end)) {
             throw new NoValidDataParams("Start params is after end params");
         }

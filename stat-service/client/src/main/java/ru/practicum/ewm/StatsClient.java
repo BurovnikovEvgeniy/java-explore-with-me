@@ -1,58 +1,45 @@
 package ru.practicum.ewm;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
+import java.util.ResourceBundle;
 
 @Service
-public class StatsClient extends BaseClient {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+@RequiredArgsConstructor
+public class StatsClient {
 
-    @Value("${server.application.name:ewm-main-service}")
-    private String applicationName;
+    private final WebClient webClient;
+    private final ResourceBundle resource = ResourceBundle.getBundle("messages");
 
-    public StatsClient(@Value("${STAT_SERVER_URL}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
-        );
+    public EndpointHit saveHit(EndpointHit endpointHit) {
+        String uri = resource.getString("client.hits");
+        return webClient.post()
+                .uri(uri)
+                .bodyValue(endpointHit)
+                .retrieve()
+                .bodyToMono(EndpointHit.class)
+                .block();
     }
 
-    public ResponseEntity<Object> saveHit(HttpServletRequest request) {
-        final EndpointHit hit = EndpointHit.builder()
-                .app(applicationName)
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(Timestamp.from(Instant.now()).toLocalDateTime())
-                .build();
-        return post(hit);
+    public List<ViewStats> getHit(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        String uri = resource.getString("client.stats");
+        String request = String.format(uri, encode(String.valueOf(start)), encode(String.valueOf(end)), uris, unique);
+        return webClient.get()
+                .uri(request)
+                .retrieve()
+                .bodyToFlux(ViewStats.class)
+                .collectList()
+                .block();
     }
 
-    public ResponseEntity<Object> getHit(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start.format(formatter),
-                "end", end.format(formatter)
-        );
-
-        if (uris != null) {
-            parameters.put("uris", String.join(",", uris));
-        }
-        if (unique) {
-            parameters.put("unique", true);
-        }
-        return get("/stats?start={start}&end={end}", parameters);
+    private String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }
