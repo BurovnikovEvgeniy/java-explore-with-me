@@ -40,7 +40,6 @@ public class EventPrivateController {
     @ResponseStatus(HttpStatus.CREATED)
     public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
                                  @PathVariable @Positive Long userId) {
-//        if (newEventDto.getEventDate() != null) checkEventStart(newEventDto.getEventDate());
         if (newEventDto.getPaid() == null) newEventDto.setPaid(false);
         if (newEventDto.getParticipantLimit() == null) newEventDto.setParticipantLimit(0L);
         if (newEventDto.getRequestModeration() == null) newEventDto.setRequestModeration(true);
@@ -64,9 +63,7 @@ public class EventPrivateController {
     public FullEventDto updateEvent(@RequestBody @Valid UpdateEventDto updateEventDto,
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
-//        if (updateEventDto.getEventDate() != null) {
-//            checkEventStart(updateEventDto.getEventDate());
-//        }
+
         return eventService.updateEvent(updateEventDto, userId, eventId);
     }
 

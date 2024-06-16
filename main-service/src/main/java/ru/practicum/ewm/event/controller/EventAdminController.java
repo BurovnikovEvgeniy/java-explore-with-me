@@ -49,9 +49,6 @@ public class EventAdminController {
     @PatchMapping("/{eventId}")
     public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDto,
                                            @PathVariable Long eventId) {
-//        if (updateEventDto.getEventDate() != null) {
-//            checkEventStart(updateEventDto.getEventDate());
-//        }
         return eventService.updateEventByAdmin(updateEventDto, eventId);
     }
 }
