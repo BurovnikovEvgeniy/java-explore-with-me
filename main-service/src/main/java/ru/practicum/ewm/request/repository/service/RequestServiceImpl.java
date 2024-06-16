@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.exceptions.AccessRejectException;
+import ru.practicum.ewm.exceptions.ConflictException;
 import ru.practicum.ewm.exceptions.EntityNotFoundException;
 import ru.practicum.ewm.request.dto.RequestDto;
 import ru.practicum.ewm.request.mapper.RequestMapper;
@@ -42,18 +42,18 @@ public class RequestServiceImpl implements RequestService {
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
                 new EntityNotFoundException("Событие не найдено"));
         if (event.getInitiator().getId().equals(userId)) {
-            throw new AccessRejectException("Менеджер мероприятий не может сделать запрос на это мероприятие");
+            throw new ConflictException("Менеджер мероприятий не может сделать запрос на это мероприятие");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new AccessRejectException("Событие с id=" + eventId + " не опубликовано");
+            throw new ConflictException("Событие с id=" + eventId + " не опубликовано");
         }
         if (requestRepository.existsByEventIdAndRequesterId(eventId, userId)) {
-            throw new AccessRejectException("Пользователь с id=" + userId + " уже отправил запрос на участие в событии с id=" + eventId);
+            throw new ConflictException("Пользователь с id=" + userId + " уже отправил запрос на участие в событии с id=" + eventId);
         }
-        List<Request> list = requestRepository.findAll();
+        requestRepository.findAll();
         Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit() > 0 && event.getParticipantLimit() <= confirmedRequests) {
-            throw new AccessRejectException("Лимит участников достигнут");
+            throw new ConflictException("Лимит участников достигнут");
         }
         RequestStatus status;
         status = event.getRequestModeration() ? PENDING : CONFIRMED;

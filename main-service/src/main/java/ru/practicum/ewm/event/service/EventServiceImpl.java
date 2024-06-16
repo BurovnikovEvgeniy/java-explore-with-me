@@ -18,7 +18,7 @@ import ru.practicum.ewm.event.dto.UpdateEventDto;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.exceptions.AccessRejectException;
+import ru.practicum.ewm.exceptions.ConflictException;
 import ru.practicum.ewm.exceptions.EntityNotFoundException;
 import ru.practicum.ewm.exceptions.NoValidDataParams;
 import ru.practicum.ewm.location.mapper.LocationMapper;
@@ -110,7 +110,7 @@ public class EventServiceImpl implements EventService {
         getUser(userId);
         Event event = getEvent(eventId);
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new AccessRejectException("Ошибка доступа: событие может быть изменено только владельцем");
+            throw new ConflictException("Ошибка доступа: событие может быть изменено только владельцем");
         }
         Event updatedEvent = checkEventForUpdate(event, updateEventDto);
         if (updateEventDto.getStateAction() != null) {
@@ -145,11 +145,11 @@ public class EventServiceImpl implements EventService {
         getUser(userId);
         Event event = getEvent(eventId);
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
-            throw new AccessRejectException("Запрос нельзя обновить");
+            throw new ConflictException("Запрос нельзя обновить");
         }
         Long numOfConfirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit().equals(numOfConfirmedRequests)) {
-            throw new AccessRejectException("Лимит участников достигнут, ограничение - " + numOfConfirmedRequests);
+            throw new ConflictException("Лимит участников достигнут, ограничение - " + numOfConfirmedRequests);
         }
 
         RequestResultDto requestResultDto = RequestResultDto
@@ -210,7 +210,7 @@ public class EventServiceImpl implements EventService {
     public FullEventDto updateEventByAdmin(UpdateEventDto updateEventDto, Long eventId) {
         Event event = checkEventForUpdate(getEvent(eventId), updateEventDto);
         if (event.getState().equals(CANCELED)) {
-            throw new AccessRejectException("Событие отменено");
+            throw new ConflictException("Событие отменено");
         }
         if (updateEventDto.getStateAction() != null) {
             switch (updateEventDto.getStateAction()) {
@@ -341,7 +341,7 @@ public class EventServiceImpl implements EventService {
 
     private Event checkEventForUpdate(Event event, UpdateEventDto updateEventDto) {
         if (event.getState().equals(PUBLISHED)) {
-            throw new AccessRejectException("Событие опубликовано, редактирование невозможно");
+            throw new ConflictException("Событие опубликовано, редактирование невозможно");
         }
 
         if (updateEventDto.getAnnotation() != null && !updateEventDto.getAnnotation()
