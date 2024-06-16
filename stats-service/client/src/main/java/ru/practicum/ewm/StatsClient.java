@@ -18,7 +18,7 @@ public class StatsClient {
     @Autowired
     private final WebClient webClient;
 
-    private final ResourceBundle resource = ResourceBundle.getBundle("messages");
+    private final ResourceBundle resource = ResourceBundle.getBundle("stat");
 
     public void saveHit(EndpointHit endpointHit) {
         String uri = resource.getString("client.hits");

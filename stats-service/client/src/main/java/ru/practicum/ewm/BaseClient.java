@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class BaseClient {
 
-    @Value("${server.application.name:ewm-main-service}")
+    @Value("${stats-server.url}")
     private String applicationName;
 
     @Bean
