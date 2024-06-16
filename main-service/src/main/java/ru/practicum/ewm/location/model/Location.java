@@ -1,11 +1,10 @@
-package ru.practicum.ewm.user.model;
-
+package ru.practicum.ewm.location.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,20 +16,16 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Setter
-@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User {
-
+@Table(name = "locations")
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "email")
-    private String email;
+    @Column(name = "lat")
+    private float lat;
+    @Column(name = "lon")
+    private float lon;
 }
