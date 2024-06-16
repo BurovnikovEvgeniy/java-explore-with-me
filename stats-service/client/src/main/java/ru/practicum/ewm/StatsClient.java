@@ -14,16 +14,12 @@ import java.util.ResourceBundle;
 @Service
 @RequiredArgsConstructor
 public class StatsClient {
-
     @Autowired
     private final WebClient webClient;
 
-    private final ResourceBundle resource = ResourceBundle.getBundle("stat");
-
     public void saveHit(EndpointHit endpointHit) {
-        String uri = resource.getString("client.hits");
         webClient.post()
-                .uri(uri)
+                .uri("/hits")
                 .bodyValue(endpointHit)
                 .retrieve()
                 .bodyToMono(EndpointHit.class)
@@ -31,8 +27,12 @@ public class StatsClient {
     }
 
     public List<ViewStats> getHit(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        String uri = resource.getString("client.stats");
-        String request = String.format(uri, encode(String.valueOf(start)), encode(String.valueOf(end)), uris, unique);
+        String request = String.format("/stats?start=%s&end=%s&uris=%s&unique=%s",
+                encode(String.valueOf(start)),
+                encode(String.valueOf(end)),
+                uris,
+                unique
+        );
         return webClient.get()
                 .uri(request)
                 .retrieve()
