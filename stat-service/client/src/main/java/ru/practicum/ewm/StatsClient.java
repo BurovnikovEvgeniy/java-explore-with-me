@@ -20,9 +20,9 @@ public class StatsClient {
 
     private final ResourceBundle resource = ResourceBundle.getBundle("messages");
 
-    public EndpointHit saveHit(EndpointHit endpointHit) {
+    public void saveHit(EndpointHit endpointHit) {
         String uri = resource.getString("client.hits");
-        return webClient.post()
+        webClient.post()
                 .uri(uri)
                 .bodyValue(endpointHit)
                 .retrieve()

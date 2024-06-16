@@ -10,8 +10,8 @@ public abstract class EventMapperDecorator implements EventMapper {
     private EventMapper eventMapper;
 
     @Override
-    public Event toEvent(NewEventDto newEventDTO, Category category) {
-        Event event = eventMapper.toEvent(newEventDTO, category);
+    public Event toEvent(NewEventDto newEventDto, Category category) {
+        Event event = eventMapper.toEvent(newEventDto, category);
         event.setCategory(category);
         return event;
     }

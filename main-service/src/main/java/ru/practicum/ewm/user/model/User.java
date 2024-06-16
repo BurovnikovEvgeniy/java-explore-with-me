@@ -1,6 +1,5 @@
 package ru.practicum.ewm.user.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

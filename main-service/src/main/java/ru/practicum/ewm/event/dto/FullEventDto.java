@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import ru.practicum.ewm.utils.EventState;
 
 import java.time.LocalDateTime;
 
 @Data
-@Getter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class FullEventDto extends ShortEventDto {
