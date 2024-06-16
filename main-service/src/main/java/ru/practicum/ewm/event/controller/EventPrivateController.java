@@ -34,7 +34,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}/events")
 public class EventPrivateController {
-    
     private final EventService eventService;
 
     @PostMapping

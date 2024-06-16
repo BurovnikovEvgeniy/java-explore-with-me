@@ -44,8 +44,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.utils.EventSort.EVENT_DATE;
-import static ru.practicum.ewm.utils.EventSort.VIEWS;
 import static ru.practicum.ewm.utils.EventState.CANCELED;
 import static ru.practicum.ewm.utils.EventState.PENDING;
 import static ru.practicum.ewm.utils.EventState.PUBLISHED;
@@ -150,7 +148,7 @@ public class EventServiceImpl implements EventService {
             throw new AccessRejectException("Запрос нельзя обновить");
         }
         Long numOfConfirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
-        if (event.getParticipantLimit().equals(numOfConfirmedRequests)){
+        if (event.getParticipantLimit().equals(numOfConfirmedRequests)) {
             throw new AccessRejectException("Лимит участников достигнут, ограничение - " + numOfConfirmedRequests);
         }
 
