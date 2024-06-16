@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StatsClient {
-    @Autowired
+
     private final WebClient webClient;
 
     public void saveHit(EndpointHit endpointHit) {
