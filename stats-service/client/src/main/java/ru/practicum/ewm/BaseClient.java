@@ -11,12 +11,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class BaseClient {
 
     @Value("${stats-server.url}")
-    private String applicationName;
+    private String baseUrl;
 
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
-                .baseUrl(applicationName)
+                .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
