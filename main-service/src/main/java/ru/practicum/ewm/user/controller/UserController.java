@@ -43,10 +43,4 @@ public class UserController {
                                   @RequestParam(defaultValue = "10") @Positive int size) {
         return service.getUsers(ids, PageRequest.of(from / size, size));
     }
-
-    @GetMapping
-    public List<UserDto> getUsers(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                  @RequestParam(defaultValue = "10") @Positive int size) {
-        return service.getUsers(PageRequest.of(from / size, size));
-    }
 }

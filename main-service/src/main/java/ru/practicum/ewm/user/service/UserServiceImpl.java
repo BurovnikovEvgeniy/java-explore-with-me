@@ -30,16 +30,8 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUsers(List<Long> usersIds, PageRequest pageRequest) {
         return repository.findAll(pageRequest)
                 .stream().filter(el -> usersIds.contains(el.getId()))
-                .map(el -> mapper.toUserDto(el))
+                .map(mapper::toUserDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<UserDto> getUsers(PageRequest pageRequest) {
-        return repository.findAll(pageRequest)
-                .map(el -> mapper.toUserDto(el))
-                .toList();
     }
 
     @Override

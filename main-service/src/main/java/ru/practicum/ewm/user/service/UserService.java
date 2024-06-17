@@ -10,7 +10,5 @@ public interface UserService {
 
     List<UserDto> getUsers(List<Long> usersIds, PageRequest pageRequest);
 
-    List<UserDto> getUsers(PageRequest pageRequest);
-
     void deleteUser(long userId);
 }
