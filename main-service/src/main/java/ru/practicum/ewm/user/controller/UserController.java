@@ -20,11 +20,11 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/admin/users")
 @RequiredArgsConstructor
+@RequestMapping("/admin/users")
 public class UserController {
 
-    private UserService service;
+    private final UserService service;
 
     @PostMapping
     public UserDto addUser(@RequestBody UserDto newUser) {
