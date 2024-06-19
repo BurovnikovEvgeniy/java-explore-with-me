@@ -26,7 +26,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     @Transactional(readOnly = true)
     public List<ViewStats> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        if (uris == null) {
+        if (uris.isEmpty()) {
             if (unique) {
                 return statRepository.findAllUniqueStats(start, end);
             } else {
@@ -34,7 +34,7 @@ public class StatsServiceImpl implements StatsService {
             }
         } else {
             if (unique) {
-                return statRepository.findAllUniqueStatsWithUris(uris, start, end);
+                return statRepository.findAllUniqueStatsWithUris(uris.get(0), start, end);
             } else {
                 return statRepository.findAllStatsWithUris(uris, start, end);
             }

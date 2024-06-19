@@ -122,7 +122,7 @@ public class EventServiceImpl implements EventService {
                     updatedEvent.setState(PENDING);
                     break;
                 default:
-                    throw new NoValidDataParams("Некорректное состояние события");
+                    throw new ConflictException("Некорректное состояние события");
             }
         }
         event = eventRepository.save(updatedEvent);
@@ -174,7 +174,7 @@ public class EventServiceImpl implements EventService {
                     numOfConfirmedRequests++;
                     break;
                 default:
-                    throw new NoValidDataParams("Передан некорректный запрос");
+                    throw new ConflictException("Передан некорректный запрос");
             }
         }
         return requestResultDto;
@@ -222,7 +222,7 @@ public class EventServiceImpl implements EventService {
                     event.setState(PUBLISHED);
                     break;
                 default:
-                    throw new NoValidDataParams("Передан некорректный запрос");
+                    throw new ConflictException("Передан некорректный запрос");
             }
         }
         Event updatedEvent = eventRepository.save(event);

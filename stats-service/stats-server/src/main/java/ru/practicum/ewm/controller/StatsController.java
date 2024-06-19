@@ -35,17 +35,15 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
     public List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                    @RequestParam(required = false) List<String> uris,
+                                    @RequestParam(defaultValue = "") String[] uris,
                                     @RequestParam(defaultValue = "false") boolean unique) {
         log.info("GET request to get all statistic.");
-        if (start == null || end == null) {
-            throw new NoValidDataParams("Start params OR end params is null");
-        }
         if (start.isAfter(end)) {
             throw new NoValidDataParams("Start params is after end params");
         }
-        return service.getViewStatsList(start, end, uris, unique);
+        return service.getViewStatsList(start, end, List.of(uris), unique);
     }
 }

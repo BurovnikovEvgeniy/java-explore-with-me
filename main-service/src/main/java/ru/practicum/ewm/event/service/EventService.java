@@ -40,7 +40,7 @@ public interface EventService {
 
     FullEventDto getPublishedEventById(Long id, HttpServletRequest request);
 
-    public List<Event> fillWithEventViews(List<Event> events);
+    List<Event> fillWithEventViews(List<Event> events);
 
     List<Event> fillWithConfirmedRequests(List<Event> events);
 
