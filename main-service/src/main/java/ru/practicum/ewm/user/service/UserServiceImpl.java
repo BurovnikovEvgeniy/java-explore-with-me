@@ -11,7 +11,6 @@ import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.repository.UserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
