@@ -29,16 +29,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> usersIds, PageRequest pageRequest) {
-        return repository.findAll(pageRequest)
-                .stream().filter(el -> usersIds.contains(el.getId()))
-                .map(mapper::toUserDto)
-                .collect(Collectors.toList());
+        return (usersIds.isEmpty()) ? mapper.toUserDto(repository.findAll(pageRequest).toList())
+                : mapper.toUserDto(repository.findAllByIdIn(usersIds, pageRequest));
     }
 
     @Override
     @Transactional
     public void deleteUser(long userId) {
-        if (repository.findById(userId).isEmpty()) {
+        if (repository.existsById(userId)) {
             throw new EntityNotFoundException("Не найден пользователь с id=" + userId + ", он не найден");
         }
         repository.deleteById(userId);
