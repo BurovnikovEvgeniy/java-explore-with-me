@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -25,10 +26,11 @@ public class StatsClient {
     }
 
     public List<ViewStats> getHit(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String request = String.format("/stats?start=%s&end=%s&uris=%s&unique=%s",
-                encode(String.valueOf(start)),
-                encode(String.valueOf(end)),
-                uris,
+                start.format(formatter),
+                end.format(formatter),
+                String.join(",", uris),
                 unique
         );
         return webClient.get()
@@ -37,9 +39,5 @@ public class StatsClient {
                 .bodyToFlux(ViewStats.class)
                 .collectList()
                 .block();
-    }
-
-    private String encode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }

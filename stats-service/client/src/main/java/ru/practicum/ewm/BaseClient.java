@@ -11,7 +11,6 @@ public class BaseClient {
 
     @Bean
     public WebClient webClient() {
-        //    @Value("${stats-server.url}")
         String baseUrl = "http://localhost:9090";
         return WebClient.builder()
                 .baseUrl(baseUrl)
