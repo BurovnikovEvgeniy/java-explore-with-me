@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS stats (
     uri VARCHAR(255) NOT NULL,
     ip VARCHAR(50) NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE
-    );
+);
