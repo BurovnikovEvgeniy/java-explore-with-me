@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class BaseClient {
+public class ClientConfig {
 
     @Value("${stats-server.url}")
     private String baseUrl;

@@ -16,7 +16,7 @@ public class StatsClient {
 
     public void saveHit(EndpointHit endpointHit) {
         webClient.post()
-                .uri("/hits")
+                .uri("/hit")
                 .bodyValue(endpointHit)
                 .retrieve()
                 .bodyToMono(EndpointHit.class)
