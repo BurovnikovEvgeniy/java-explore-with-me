@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.ewm.compilation.model.Compilation;
 
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
-    @Query(value = "SELECT * FROM compilation c " +
+    @Query(value = "SELECT с FROM compilation c " +
             "WHERE (:pinned is null or c.name = :pinned)", nativeQuery = true)
     Page<Compilation> findAllByPinned(Boolean pinned, PageRequest pageRequest);
 }
