@@ -29,7 +29,7 @@ public class CompilationAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDTO) {
+    public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDTO) {
         if (newCompilationDTO.getPinned() == null) {
             newCompilationDTO.setPinned(false);
         }
@@ -38,12 +38,12 @@ public class CompilationAdminController {
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteCompilation(@PathVariable Long compId) {
+    public void deleteCompilation(@PathVariable Long compId) {
         compilationService.deleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}")
-    CompilationDto updateCompilation(@RequestBody @Valid UpdateCompilationDto updateCompilationDTO,
+    public CompilationDto updateCompilation(@RequestBody @Valid UpdateCompilationDto updateCompilationDTO,
                                      @PathVariable Long compId) {
         return compilationService.updateCompilation(updateCompilationDTO, compId);
     }
