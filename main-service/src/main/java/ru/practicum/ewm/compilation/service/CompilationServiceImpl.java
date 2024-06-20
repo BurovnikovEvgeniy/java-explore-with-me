@@ -58,8 +58,12 @@ public class CompilationServiceImpl implements CompilationService {
             HashSet<Event> events = new HashSet<>(eventRepository.findAllByIdIn(updateCompilationDto.getEvents()));
             compilation.setEvents(events);
         }
-        if (updateCompilationDto.getPinned() != null) compilation.setPinned(updateCompilationDto.getPinned());
-        if (updateCompilationDto.getTitle() != null) compilation.setTitle(updateCompilationDto.getTitle());
+        if (updateCompilationDto.getPinned() != null) {
+            compilation.setPinned(updateCompilationDto.getPinned());
+        }
+        if (updateCompilationDto.getTitle() != null) {
+            compilation.setTitle(updateCompilationDto.getTitle());
+        }
 
         return compilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
