@@ -40,8 +40,7 @@ public class CompilationServiceImpl implements CompilationService {
         events = eventService.fillWithConfirmedRequests(events);
         events = eventService.fillWithEventViews(events);
         compilation.setEvents(new HashSet<>(events));
-        CompilationDto compilationDTO = compilationMapper.toCompilationDto(compilationRepository.save(compilation));
-        return compilationDTO;
+        return compilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
 
     @Override

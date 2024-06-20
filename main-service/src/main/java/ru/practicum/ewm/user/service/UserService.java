@@ -1,15 +1,15 @@
 package ru.practicum.ewm.user.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.ewm.user.dto.NewUserDto;
-import ru.practicum.ewm.user.dto.UserDto;
+import ru.practicum.ewm.user.dto.NewUserDTO;
+import ru.practicum.ewm.user.dto.UserDTO;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto addUser(NewUserDto newUser);
+    UserDTO addUser(NewUserDTO newUserDTO);
 
-    List<UserDto> getUsers(List<Long> usersIds, PageRequest pageRequest);
+    void deleteUser(Long userId);
 
-    void deleteUser(long userId);
+    List<UserDTO> getUsers(List<Long> ids, PageRequest pageRequest);
 }
