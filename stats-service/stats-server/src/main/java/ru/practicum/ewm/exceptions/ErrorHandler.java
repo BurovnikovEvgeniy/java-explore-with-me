@@ -7,46 +7,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({NotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(final Exception e) {
-        log.warn("Получен статус 404 NOT_FOUND {}", e.getMessage(), e);
-        return new ErrorResponse(
-                e.getMessage()
-
-        );
-    }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidateAnnotationException(final Exception e) {
-        log.warn("Получен статус 400 BAD_REQUEST {}", e.getMessage(), e);
-        return new ErrorResponse(
-                e.getMessage()
-        );
+    public ApiError handleValidationException(NoValidDataParams e) {
+        log.info("Incorrect request {}", e.getMessage());
+        return new ApiError(e.getMessage(), "Incorrect request", HttpStatus.BAD_REQUEST.name(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
-
-    @ExceptionHandler({NoValidDataParams.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final Exception e) {
-        log.warn("Получен статус 400 BAD_REQUEST {}", e.getMessage(), e);
-        return new ErrorResponse(
-                e.getMessage()
-        );
-    }
-
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleOtherException(final Throwable e) {
-        log.warn("Получен статус 500 SERVER_ERROR {}", e.getMessage(), e);
-        return new ErrorResponse(
-                e.getMessage()
-        );
+    public ApiError handleServerException(RuntimeException e) {
+        log.info("Incorrect request {}", e.getMessage());
+        return new ApiError(e.getMessage(), Arrays.toString(e.getStackTrace()), HttpStatus.INTERNAL_SERVER_ERROR.name(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 }
