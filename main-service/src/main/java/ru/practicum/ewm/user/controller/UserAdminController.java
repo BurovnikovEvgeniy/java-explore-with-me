@@ -33,8 +33,8 @@ public class UserAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO addUser(@RequestBody @Valid NewUserDTO newUserDTO) {
-        return userService.addUser(newUserDTO);
+    public UserDTO addUser(@RequestBody @Valid NewUserDTO newUser) {
+        return userService.addUser(newUser);
     }
 
     @DeleteMapping("/{userId}")
