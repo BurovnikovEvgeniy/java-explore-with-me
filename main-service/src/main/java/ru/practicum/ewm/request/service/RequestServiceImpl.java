@@ -69,7 +69,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public List<RequestDto> getAllRequests(Long userId) {
-        getUserIfExist(userId);
+//        getUserIfExist(userId);
         return requestMapper.toRequestDto(requestRepository.findAllByRequesterId(userId));
     }
 
