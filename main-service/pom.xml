@@ -21,8 +21,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>ru.practicum</groupId>
-            <artifactId>client</artifactId>
+            <groupId>ru.practicum.ewm</groupId>
+            <artifactId>stats-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
