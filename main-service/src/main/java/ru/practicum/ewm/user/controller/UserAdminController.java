@@ -23,13 +23,11 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.USERS_ADMIN_URI;
-
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(USERS_ADMIN_URI)
+@RequestMapping("/admin/users")
 public class UserAdminController {
     private final UserService userService;
 
@@ -42,7 +40,6 @@ public class UserAdminController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @Positive Long userId) {
-        log.info("Response from DELETE request on {}{}", USERS_ADMIN_URI, userId);
         userService.deleteUser(userId);
     }
 
@@ -50,7 +47,6 @@ public class UserAdminController {
     public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                   @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Response from GET request on {}", USERS_ADMIN_URI);
         return userService.getUsers(ids, PageRequest.of(from / size, size));
     }
 }

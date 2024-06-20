@@ -23,13 +23,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
-import static ru.practicum.ewm.utils.Constants.EVENTS_PUBLIC_URI;
 
 @Slf4j
 @Validated
 @RestController
 @AllArgsConstructor
-@RequestMapping(EVENTS_PUBLIC_URI)
+@RequestMapping("/events")
 public class EventPublicController {
     public static final String ID_URI = "/{id}";
     private final EventService eventService;
@@ -47,7 +46,6 @@ public class EventPublicController {
                                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                   @RequestParam(defaultValue = "10") @Positive int size,
                                                   HttpServletRequest request) {
-        log.info("Response from GET request on {}", EVENTS_PUBLIC_URI);
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("The date of start cannot be after end");
         }
@@ -56,7 +54,6 @@ public class EventPublicController {
 
     @GetMapping(ID_URI)
     public FullEventDto getPublishedEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
-        log.info("Response from GET request on {}", EVENTS_PUBLIC_URI + ID_URI);
         return eventService.getPublishedEventById(id, request);
     }
 }

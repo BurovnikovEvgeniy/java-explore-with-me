@@ -24,14 +24,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
-import static ru.practicum.ewm.utils.Constants.EVENTS_ADMIN_URI;
-import static ru.practicum.ewm.utils.Constants.EVENT_ID_URI;
 
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(EVENTS_ADMIN_URI)
+@RequestMapping("/admin/events")
 public class EventAdminController {
     private final EventService eventService;
 
@@ -45,14 +43,12 @@ public class EventAdminController {
                                                @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime rangeEnd,
                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Response from GET request on {}", EVENTS_ADMIN_URI);
         return eventService.getEventsByAdmin(usersIds, states, eventsIds, rangeStart, rangeEnd, PageRequest.of(from / size, size));
     }
 
-    @PatchMapping(EVENT_ID_URI)
+    @PatchMapping("/{eventId}")
     public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                            @PathVariable Long eventId) {
-        log.info("Response from PATCH request on {}", EVENTS_ADMIN_URI + EVENT_ID_URI);
         return eventService.updateEventByAdmin(updateEventDTO, eventId);
     }
 }

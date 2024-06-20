@@ -28,15 +28,12 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.EVENTS_PRIVATE_URI;
-import static ru.practicum.ewm.utils.Constants.EVENT_ID_REQUESTS_URI;
-import static ru.practicum.ewm.utils.Constants.EVENT_ID_URI;
 
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(EVENTS_PRIVATE_URI)
+@RequestMapping("/users/{userId}/events")
 public class EventPrivateController {
     private final EventService eventService;
 
@@ -44,7 +41,6 @@ public class EventPrivateController {
     @ResponseStatus(HttpStatus.CREATED)
     public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDTO,
                                  @PathVariable @Positive Long userId) {
-        log.info("Response from POST request on {}", EVENTS_PRIVATE_URI);
         if (newEventDTO.getPaid() == null) {
             newEventDTO.setPaid(false);
         }
@@ -57,10 +53,9 @@ public class EventPrivateController {
         return eventService.addEvent(newEventDTO, userId);
     }
 
-    @GetMapping(EVENT_ID_URI)
+    @GetMapping("/{eventId}")
     public FullEventDto getEvent(@PathVariable @Positive Long userId,
                                  @PathVariable @Positive Long eventId) {
-        log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
         return eventService.getEvent(userId, eventId);
     }
 
@@ -68,30 +63,26 @@ public class EventPrivateController {
     public List<ShortEventDto> getAllEvents(@PathVariable @Positive Long userId,
                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                             @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Response from GET request on {}", EVENTS_PRIVATE_URI);
         return eventService.getAllEvents(userId, PageRequest.of(from / size, size));
     }
 
-    @PatchMapping(EVENT_ID_URI)
+    @PatchMapping("/{eventId}")
     public FullEventDto updateEvent(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
-        log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
         return eventService.updateEvent(updateEventDTO, userId, eventId);
     }
 
-    @GetMapping(EVENT_ID_REQUESTS_URI)
+    @GetMapping("/{eventId}/requests")
     public List<RequestDto> getRequestsByEventId(@PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
-        log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);
         return eventService.getRequestsByEventId(userId, eventId);
     }
 
-    @PatchMapping(EVENT_ID_REQUESTS_URI)
+    @PatchMapping("/{eventId}/requests")
     public RequestResultDto updateRequestsStatus(@RequestBody @Valid RequestUpdateDto requestUpdateDTO,
                                                  @PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
-        log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);
         return eventService.updateRequestsStatus(requestUpdateDTO, userId, eventId);
     }
 }

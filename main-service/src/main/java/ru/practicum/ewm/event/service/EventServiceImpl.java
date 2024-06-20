@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.utils.Constants.EVENTS_PUBLIC_URI;
 import static ru.practicum.ewm.utils.EventState.CANCELED;
 import static ru.practicum.ewm.utils.EventState.PENDING;
 import static ru.practicum.ewm.utils.EventState.PUBLISHED;
@@ -297,7 +296,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> fillWithEventViews(List<Event> events) {
-        String eventsUri = EVENTS_PUBLIC_URI + "/";
+        String eventsUri = "/events/";
         List<String> uris = events
                 .stream()
                 .map(event -> String.format(eventsUri + "%d", event.getId()))

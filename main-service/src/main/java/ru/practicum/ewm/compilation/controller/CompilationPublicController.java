@@ -14,18 +14,15 @@ import ru.practicum.ewm.compilation.service.CompilationService;
 
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.COMPILATIONS_PUBLIC_URI;
-import static ru.practicum.ewm.utils.Constants.COMPILATION_ID_URI;
-
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(COMPILATIONS_PUBLIC_URI)
+@RequestMapping("/compilations")
 public class CompilationPublicController {
     private final CompilationService compilationService;
 
-    @GetMapping(COMPILATION_ID_URI)
+    @GetMapping("/{compId}")
     public CompilationDto getCompilation(@PathVariable Long compId) {
         return compilationService.getCompilation(compId);
     }

@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.COMPILATION_NOT_FOUND;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -82,6 +80,6 @@ public class CompilationServiceImpl implements CompilationService {
 
     private Compilation getCompilationIfExist(Long compId) {
         return compilationRepository.findById(compId).orElseThrow(() ->
-                new NotFoundException(String.format(COMPILATION_NOT_FOUND, compId)));
+                new NotFoundException("Подборка с id=" + compId + " не найдена"));
     }
 }

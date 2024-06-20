@@ -19,8 +19,6 @@ import ru.practicum.ewm.compilation.service.CompilationService;
 
 import javax.validation.Valid;
 
-import static ru.practicum.ewm.utils.Constants.COMPILATION_ID_URI;
-
 @Slf4j
 @Validated
 @RestController
@@ -38,13 +36,13 @@ public class CompilationAdminController {
         return compilationService.addCompilation(newCompilationDTO);
     }
 
-    @DeleteMapping(COMPILATION_ID_URI)
+    @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteCompilation(@PathVariable Long compId) {
         compilationService.deleteCompilation(compId);
     }
 
-    @PatchMapping(COMPILATION_ID_URI)
+    @PatchMapping("/{compId}")
     CompilationDto updateCompilation(@RequestBody @Valid UpdateCompilationDto updateCompilationDTO,
                                      @PathVariable Long compId) {
         return compilationService.updateCompilation(updateCompilationDTO, compId);
