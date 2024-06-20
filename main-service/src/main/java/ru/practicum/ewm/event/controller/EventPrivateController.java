@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,69 +13,82 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.event.dto.FullEventDto;
-import ru.practicum.ewm.event.dto.NewEventDto;
-import ru.practicum.ewm.event.dto.ShortEventDto;
-import ru.practicum.ewm.event.dto.UpdateEventDto;
+import ru.practicum.ewm.event.dto.FullEventDTO;
+import ru.practicum.ewm.event.dto.NewEventDTO;
+import ru.practicum.ewm.event.dto.ShortEventDTO;
+import ru.practicum.ewm.event.dto.UpdateEventDTO;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.request.dto.RequestDto;
-import ru.practicum.ewm.request.dto.RequestResultDto;
-import ru.practicum.ewm.request.dto.RequestUpdateDto;
+import ru.practicum.ewm.request.dto.RequestDTO;
+import ru.practicum.ewm.request.dto.RequestResultDTO;
+import ru.practicum.ewm.request.dto.RequestUpdateDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.Constants.EVENTS_PRIVATE_URI;
+import static ru.practicum.ewm.utils.Constants.EVENT_ID_REQUESTS_URI;
+import static ru.practicum.ewm.utils.Constants.EVENT_ID_URI;
+import static ru.practicum.ewm.utils.Utilities.checkEventStart;
+import static ru.practicum.ewm.utils.Utilities.fromSizePage;
+
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{userId}/events")
+@RequestMapping(EVENTS_PRIVATE_URI)
 public class EventPrivateController {
     private final EventService eventService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
+    public FullEventDTO addEvent(@RequestBody @Valid NewEventDTO newEventDTO,
                                  @PathVariable @Positive Long userId) {
-        if (newEventDto.getPaid() == null) newEventDto.setPaid(false);
-        if (newEventDto.getParticipantLimit() == null) newEventDto.setParticipantLimit(0L);
-        if (newEventDto.getRequestModeration() == null) newEventDto.setRequestModeration(true);
-        return eventService.addEvent(newEventDto, userId);
+        log.info("Response from POST request on {}", EVENTS_PRIVATE_URI);
+        if (newEventDTO.getEventDate() != null) checkEventStart(newEventDTO.getEventDate());
+        if (newEventDTO.getPaid() == null) newEventDTO.setPaid(false);
+        if (newEventDTO.getParticipantLimit() == null) newEventDTO.setParticipantLimit(0L);
+        if (newEventDTO.getRequestModeration() == null) newEventDTO.setRequestModeration(true);
+        return eventService.addEvent(newEventDTO, userId);
     }
 
-    @GetMapping("/{eventId}")
-    public FullEventDto getEvent(@PathVariable @Positive Long userId,
+    @GetMapping(EVENT_ID_URI)
+    public FullEventDTO getEvent(@PathVariable @Positive Long userId,
                                  @PathVariable @Positive Long eventId) {
+        log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
         return eventService.getEvent(userId, eventId);
     }
 
     @GetMapping
-    public List<ShortEventDto> getAllEvents(@PathVariable @Positive Long userId,
+    public List<ShortEventDTO> getAllEvents(@PathVariable @Positive Long userId,
                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                             @RequestParam(defaultValue = "10") @Positive int size) {
-        return eventService.getAllEvents(userId, PageRequest.of(from / size, size));
+        log.info("Response from GET request on {}", EVENTS_PRIVATE_URI);
+        return eventService.getAllEvents(userId, fromSizePage(from, size));
     }
 
-    @PatchMapping("/{eventId}")
-    public FullEventDto updateEvent(@RequestBody @Valid UpdateEventDto updateEventDto,
+    @PatchMapping(EVENT_ID_URI)
+    public FullEventDTO updateEvent(@RequestBody @Valid UpdateEventDTO updateEventDTO,
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
-
-        return eventService.updateEvent(updateEventDto, userId, eventId);
+        log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
+        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
+        return eventService.updateEvent(updateEventDTO, userId, eventId);
     }
 
-    @GetMapping("/{eventId}/requests")
-    public List<RequestDto> getRequestsByEventId(@PathVariable @Positive Long userId,
+    @GetMapping(EVENT_ID_REQUESTS_URI)
+    public List<RequestDTO> getRequestsByEventId(@PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
+        log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);
         return eventService.getRequestsByEventId(userId, eventId);
     }
 
-    @PatchMapping("/{eventId}/requests")
-    public RequestResultDto updateRequestsStatus(@RequestBody @Valid RequestUpdateDto requestUpdateDto,
+    @PatchMapping(EVENT_ID_REQUESTS_URI)
+    public RequestResultDTO updateRequestsStatus(@RequestBody @Valid RequestUpdateDTO requestUpdateDTO,
                                                  @PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
-        return eventService.updateRequestsStatus(requestUpdateDto, userId, eventId);
+        log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);
+        return eventService.updateRequestsStatus(requestUpdateDTO, userId, eventId);
     }
 }

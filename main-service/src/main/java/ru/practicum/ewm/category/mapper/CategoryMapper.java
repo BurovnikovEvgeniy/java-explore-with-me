@@ -2,19 +2,18 @@ package ru.practicum.ewm.category.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.ewm.category.dto.CategoryDto;
-import ru.practicum.ewm.category.dto.NewCategoryDto;
+import ru.practicum.ewm.category.dto.CategoryDTO;
+import ru.practicum.ewm.category.dto.NewCategoryDTO;
 import ru.practicum.ewm.category.model.Category;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-
     @Mapping(target = "id", ignore = true)
-    Category toCategory(NewCategoryDto newCategoryDTO);
+    Category toCategory(NewCategoryDTO newCategoryDTO);
 
-    CategoryDto toCategoryDto(Category category);
+    CategoryDTO toCategoryDTO(Category category);
 
-    List<CategoryDto> toCategoryDto(List<Category> categories);
+    List<CategoryDTO> toCategoryDTO(List<Category> categories);
 }
