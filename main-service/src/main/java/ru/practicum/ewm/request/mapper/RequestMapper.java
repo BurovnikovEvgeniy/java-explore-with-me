@@ -3,6 +3,7 @@ package ru.practicum.ewm.request.mapper;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.request.dto.RequestDto;
 import ru.practicum.ewm.request.model.Request;
@@ -11,7 +12,7 @@ import ru.practicum.ewm.user.model.User;
 import java.util.List;
 
 @DecoratedWith(RequestMapperDecorator.class)
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RequestMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "event", source = "event")
