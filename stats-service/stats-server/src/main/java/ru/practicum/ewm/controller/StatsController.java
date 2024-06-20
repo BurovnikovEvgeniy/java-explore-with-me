@@ -18,8 +18,8 @@ import ru.practicum.ewm.service.StatsService;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.ewm.util.Constants.DATE_FORMAT;
-import static ru.practicum.ewm.util.Constants.END_BEFORE_START;
+import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
+import static ru.practicum.ewm.utils.Constants.END_BEFORE_START;
 
 @Slf4j
 @RestController
@@ -42,7 +42,9 @@ public class StatsController {
             @RequestParam(defaultValue = "") String[] uris,
             @RequestParam(defaultValue = "false") boolean unique) {
         log.info("Response from GET request on /stats");
-        if (start.isAfter(end)) throw new ValidationException(END_BEFORE_START);
+        if (start.isAfter(end)) {
+            throw new ValidationException(END_BEFORE_START);
+        }
         return service.getStats(start, end, List.of(uris), unique);
     }
 }

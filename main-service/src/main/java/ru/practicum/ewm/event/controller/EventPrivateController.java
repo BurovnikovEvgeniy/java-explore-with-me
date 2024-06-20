@@ -45,10 +45,15 @@ public class EventPrivateController {
     public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDTO,
                                  @PathVariable @Positive Long userId) {
         log.info("Response from POST request on {}", EVENTS_PRIVATE_URI);
-//        if (newEventDTO.getEventDate() != null) checkEventStart(newEventDTO.getEventDate());
-        if (newEventDTO.getPaid() == null) newEventDTO.setPaid(false);
-        if (newEventDTO.getParticipantLimit() == null) newEventDTO.setParticipantLimit(0L);
-        if (newEventDTO.getRequestModeration() == null) newEventDTO.setRequestModeration(true);
+        if (newEventDTO.getPaid() == null) {
+            newEventDTO.setPaid(false);
+        }
+        if (newEventDTO.getParticipantLimit() == null) {
+            newEventDTO.setParticipantLimit(0L);
+        }
+        if (newEventDTO.getRequestModeration() == null) {
+            newEventDTO.setRequestModeration(true);
+        }
         return eventService.addEvent(newEventDTO, userId);
     }
 
@@ -72,7 +77,6 @@ public class EventPrivateController {
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
         log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
-//        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
         return eventService.updateEvent(updateEventDTO, userId, eventId);
     }
 

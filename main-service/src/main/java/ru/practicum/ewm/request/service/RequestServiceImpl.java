@@ -20,7 +20,6 @@ import ru.practicum.ewm.utils.RequestStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.EVENT_NOT_FOUND;
 import static ru.practicum.ewm.utils.RequestStatus.CANCELED;
 import static ru.practicum.ewm.utils.RequestStatus.CONFIRMED;
 import static ru.practicum.ewm.utils.RequestStatus.PENDING;
@@ -38,23 +37,22 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public RequestDto addRequest(Long userId, Long eventId) {
-        log.debug("Adding request from user ID{} to event ID{}", userId, eventId);
         User user = getUserIfExist(userId);
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
-                new NotFoundException(String.format(EVENT_NOT_FOUND, eventId)));
+                new NotFoundException("Событие с id=" + eventId + " не найдено"));
         if (event.getInitiator().getId().equals(userId)) {
-            throw new ConflictException("The event manager is unable to make a request for his event");
+            throw new ConflictException("Автор события не может сделать запрос на это событие");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new ConflictException(String.format("Event ID%d still not published", eventId));
+            throw new ConflictException("Событие с id=" + eventId + " не опубликовано");
         }
         if (requestRepository.existsByEventIdAndRequesterId(eventId, userId)) {
-            throw new ConflictException(String.format("User ID%d already send request on event ID%d", userId, eventId));
+            throw new ConflictException("Пользователь с id=" + userId + " уже отправил запрос на событие с id=" + eventId);
         }
         List<Request> list = requestRepository.findAll();
         Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit() > 0 && event.getParticipantLimit() <= confirmedRequests) {
-            throw new ConflictException("Limit of the participants is already reached");
+            throw new ConflictException("Лимит участников уже достигнут");
         }
         RequestStatus status;
         status = event.getRequestModeration() ? PENDING : CONFIRMED;
@@ -71,23 +69,21 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public List<RequestDto> getAllRequests(Long userId) {
-        log.debug(String.format("Getting requests of user ID%d", userId));
         getUserIfExist(userId);
         return requestMapper.toRequestDto(requestRepository.findAllByRequesterId(userId));
     }
 
     @Override
     public RequestDto cancelRequest(Long userId, Long requestId) {
-        log.debug(String.format("Canceling request ID%d", requestId));
         getUserIfExist(userId);
         Request request = requestRepository.findById(requestId).orElseThrow(() ->
-                new NotFoundException(String.format("Request ID%d doesn't exist", requestId)));
+                new NotFoundException("Запрос с id=" + requestId + " не найдено"));
         request.setStatus(CANCELED);
         return requestMapper.toRequestDto(requestRepository.save(request));
     }
 
     private User getUserIfExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Юзер не найден"));
+                new NotFoundException("Юзер с id=" + userId + " не найден"));
     }
 }

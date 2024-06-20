@@ -10,7 +10,7 @@ import ru.practicum.ewm.error.exceptions.ValidationException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import static ru.practicum.ewm.util.Constants.FORMATTER;
+import static ru.practicum.ewm.utils.Constants.FORMATTER;
 
 
 @Slf4j

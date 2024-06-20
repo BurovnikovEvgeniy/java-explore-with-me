@@ -19,35 +19,29 @@ import ru.practicum.ewm.category.service.CategoryService;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-import static ru.practicum.ewm.utils.Constants.CATEGORIES_ADMIN_URI;
-import static ru.practicum.ewm.utils.Constants.USERS_ADMIN_URI;
-
 @Slf4j
 @Validated
 @RestController
 @AllArgsConstructor
-@RequestMapping(CATEGORIES_ADMIN_URI)
+@RequestMapping("/admin/categories")
 public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDTO) {
-        log.info("Response from POST request on {}", CATEGORIES_ADMIN_URI);
         return categoryService.addCategory(newCategoryDTO);
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable @Positive Long catId) {
-        log.info("Response from DELETE request on {}/{}", CATEGORIES_ADMIN_URI, catId);
         categoryService.deleteCategory(catId);
     }
 
     @PatchMapping("/{catId}")
     public CategoryDto updateCategory(@RequestBody @Valid NewCategoryDto newCategoryDTO,
                                       @PathVariable @Positive Long catId) {
-        log.info("Response from PATCH request on {}", USERS_ADMIN_URI);
         return categoryService.updateCategory(catId, newCategoryDTO);
     }
 }

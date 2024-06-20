@@ -35,7 +35,6 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto addCompilation(NewCompilationDto newCompilationDTO) {
-        log.debug("Adding compilation {}", newCompilationDTO);
         Compilation compilation = compilationMapper.toCompilation(newCompilationDTO);
         List<Event> events = newCompilationDTO.getEvents() == null ? new ArrayList<>()
                 : eventRepository.findAllByIdIn(newCompilationDTO.getEvents());
@@ -43,14 +42,12 @@ public class CompilationServiceImpl implements CompilationService {
         events = eventService.fillWithEventViews(events);
         compilation.setEvents(new HashSet<>(events));
         CompilationDto compilationDTO = compilationMapper.toCompilationDto(compilationRepository.save(compilation));
-        log.debug("Added new compilation {}", compilationDTO);
         return compilationDTO;
     }
 
     @Override
     @Transactional
     public void deleteCompilation(Long compId) {
-        log.debug("Deleting compilation ID{}", compId);
         getCompilationIfExist(compId);
         compilationRepository.deleteById(compId);
     }
@@ -58,7 +55,6 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto updateCompilation(UpdateCompilationDto updateCompilationDto, Long compId) {
-        log.debug("Updating compilation ID{}", compId);
         Compilation compilation = getCompilationIfExist(compId);
         if (updateCompilationDto.getEvents() != null) {
             HashSet<Event> events = new HashSet<>(eventRepository.findAllByIdIn(updateCompilationDto.getEvents()));
@@ -73,14 +69,12 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional(readOnly = true)
     public CompilationDto getCompilation(Long compId) {
-        log.debug("Getting compilation ID{}", compId);
         return compilationMapper.toCompilationDto(getCompilationIfExist(compId));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CompilationDto> getCompilations(Boolean pined, PageRequest pageRequest) {
-        log.debug("Getting compilations");
         return (pined == null) ? compilationMapper.toCompilationDto(compilationRepository.findAll(pageRequest).toList())
                 : compilationMapper.toCompilationDto(compilationRepository.findAllByPinned(pined, pageRequest).toList());
 

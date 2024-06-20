@@ -53,7 +53,6 @@ public class EventAdminController {
     public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                            @PathVariable Long eventId) {
         log.info("Response from PATCH request on {}", EVENTS_ADMIN_URI + EVENT_ID_URI);
-//        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
         return eventService.updateEventByAdmin(updateEventDTO, eventId);
     }
 }

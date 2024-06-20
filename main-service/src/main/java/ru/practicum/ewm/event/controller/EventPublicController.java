@@ -48,8 +48,9 @@ public class EventPublicController {
                                                   @RequestParam(defaultValue = "10") @Positive int size,
                                                   HttpServletRequest request) {
         log.info("Response from GET request on {}", EVENTS_PUBLIC_URI);
-        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd))
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("The date of start cannot be after end");
+        }
         return eventService.getPublishedEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, PageRequest.of(from / size, size), request);
     }
 

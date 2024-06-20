@@ -14,7 +14,6 @@ import ru.practicum.ewm.compilation.service.CompilationService;
 
 import java.util.List;
 
-import static ru.practicum.ewm.utils.Constants.COMPILATIONS_ADMIN_URI;
 import static ru.practicum.ewm.utils.Constants.COMPILATIONS_PUBLIC_URI;
 import static ru.practicum.ewm.utils.Constants.COMPILATION_ID_URI;
 
@@ -28,7 +27,6 @@ public class CompilationPublicController {
 
     @GetMapping(COMPILATION_ID_URI)
     public CompilationDto getCompilation(@PathVariable Long compId) {
-        log.info("Response from POST request on {}/{}", COMPILATIONS_ADMIN_URI, compId);
         return compilationService.getCompilation(compId);
     }
 
@@ -36,7 +34,6 @@ public class CompilationPublicController {
     public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pined,
                                                 @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
-        log.info("Response from POST request on {}", COMPILATIONS_ADMIN_URI);
         return compilationService.getCompilations(pined, PageRequest.of(from / size, size));
     }
 }
