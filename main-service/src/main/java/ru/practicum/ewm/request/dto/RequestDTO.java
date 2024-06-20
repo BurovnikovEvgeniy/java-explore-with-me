@@ -9,15 +9,17 @@ import ru.practicum.ewm.utils.RequestStatus;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDto {
-    private Long id;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+public class RequestDTO {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     private LocalDateTime created;
     private Long event;
+    private Long id;
     private Long requester;
     private RequestStatus status;
 }

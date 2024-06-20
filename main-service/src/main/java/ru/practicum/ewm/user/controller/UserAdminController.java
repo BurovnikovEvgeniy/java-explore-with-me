@@ -2,7 +2,6 @@ package ru.practicum.ewm.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +22,14 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.Constants.USERS_ADMIN_URI;
+import static ru.practicum.ewm.utils.Utilities.fromSizePage;
+
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/users")
+@RequestMapping(USERS_ADMIN_URI)
 public class UserAdminController {
     private final UserService userService;
 
@@ -40,6 +42,7 @@ public class UserAdminController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @Positive Long userId) {
+        log.info("Response from DELETE request on {}{}", USERS_ADMIN_URI, userId);
         userService.deleteUser(userId);
     }
 
@@ -47,6 +50,7 @@ public class UserAdminController {
     public List<UserDTO> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                   @RequestParam(defaultValue = "10") @Positive int size) {
-        return userService.getUsers(ids, PageRequest.of(from / size, size));
+        log.info("Response from GET request on {}", USERS_ADMIN_URI);
+        return userService.getUsers(ids, fromSizePage(from, size));
     }
 }

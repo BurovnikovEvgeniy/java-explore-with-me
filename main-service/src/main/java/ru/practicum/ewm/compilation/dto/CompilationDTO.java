@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.ewm.event.dto.ShortEventDto;
+import ru.practicum.ewm.event.dto.ShortEventDTO;
 
 import java.util.Set;
 
@@ -16,9 +16,9 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompilationDto {
+public class CompilationDTO {
     private Long id;
-    private Set<ShortEventDto> events;
+    private Set<ShortEventDTO> events;
     private Boolean pinned;
     private String title;
 }

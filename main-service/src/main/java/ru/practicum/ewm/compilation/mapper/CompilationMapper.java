@@ -3,8 +3,8 @@ package ru.practicum.ewm.compilation.mapper;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.ewm.compilation.dto.CompilationDto;
-import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.CompilationDTO;
+import ru.practicum.ewm.compilation.dto.NewCompilationDTO;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.event.mapper.EventMapper;
 
@@ -14,10 +14,9 @@ import java.util.List;
 @DecoratedWith(CompilationMapperDecorator.class)
 public interface CompilationMapper {
     @Mapping(target = "events", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    Compilation toCompilation(NewCompilationDto newCompilationDTO);
+    Compilation toCompilation(NewCompilationDTO newCompilationDTO);
 
-    CompilationDto toCompilationDto(Compilation compilation);
+    CompilationDTO toCompilationDTO(Compilation compilation);
 
-    List<CompilationDto> toCompilationDto(List<Compilation> compilations);
+    List<CompilationDTO> toCompilationDTO(List<Compilation> compilations);
 }

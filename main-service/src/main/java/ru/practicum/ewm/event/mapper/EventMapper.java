@@ -5,9 +5,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.practicum.ewm.category.model.Category;
-import ru.practicum.ewm.event.dto.FullEventDto;
-import ru.practicum.ewm.event.dto.NewEventDto;
-import ru.practicum.ewm.event.dto.ShortEventDto;
+import ru.practicum.ewm.event.dto.FullEventDTO;
+import ru.practicum.ewm.event.dto.NewEventDTO;
+import ru.practicum.ewm.event.dto.ShortEventDTO;
 import ru.practicum.ewm.event.model.Event;
 
 import java.util.List;
@@ -17,21 +17,15 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdOn", ignore = true)
-    @Mapping(target = "publishedOn", ignore = true)
-    @Mapping(target = "initiator", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "views", ignore = true)
-    @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(source = "category", target = "category")
-    Event toEvent(NewEventDto newEventDto, Category category);
+    Event toEvent(NewEventDTO newEventDTO, Category category);
 
     @Named(value = "shortDto")
-    ShortEventDto toShortEventDto(Event event);
+    ShortEventDTO toShortEventDTO(Event event);
 
-    List<ShortEventDto> toShortEventDto(List<Event> events);
+    List<ShortEventDTO> toShortEventDTO(List<Event> events);
 
-    Set<ShortEventDto> toShortEventDto(Set<Event> events);
+    Set<ShortEventDTO> toShortEventDTO(Set<Event> events);
 
-    FullEventDto toFullEventDto(Event event);
+    FullEventDTO toFullEventDTO(Event event);
 }

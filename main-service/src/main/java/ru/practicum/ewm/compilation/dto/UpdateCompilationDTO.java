@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateCompilationDto {
+public class UpdateCompilationDTO {
     private Set<Long> events;
     private Boolean pinned;
     @Size(max = 50)

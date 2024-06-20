@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.exceptions.EntityNotFoundException;
+import ru.practicum.ewm.error.NotFoundException;
 import ru.practicum.ewm.user.dto.NewUserDTO;
 import ru.practicum.ewm.user.dto.UserDTO;
 import ru.practicum.ewm.user.mapper.UserMapper;
@@ -24,22 +24,27 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO addUser(NewUserDTO newUserDTO) {
+        log.debug("Adding user {}", newUserDTO);
         User user = userRepository.save(userMapper.toUser(newUserDTO));
+        log.debug("User is added {}", user);
         return userMapper.toUserDTO(user);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long userId) {
+        log.debug("Deleting user ID{}", userId);
         if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("Юзер не найден");
+            throw new NotFoundException("Юзер не найден");
         }
         userRepository.deleteById(userId);
+        log.debug("User ID{} is deleted", userId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> getUsers(List<Long> ids, PageRequest pageRequest) {
+        log.debug("Getting list of users");
         return (ids.isEmpty()) ? userMapper.toUserDTO(userRepository.findAll(pageRequest).toList())
                 : userMapper.toUserDTO(userRepository.findAllByIdIn(ids, pageRequest));
     }

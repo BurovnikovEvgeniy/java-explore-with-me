@@ -1,14 +1,14 @@
-package ru.practicum.ewm.request.repository.service;
+package ru.practicum.ewm.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.error.ConflictException;
+import ru.practicum.ewm.error.NotFoundException;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.exceptions.ConflictException;
-import ru.practicum.ewm.exceptions.EntityNotFoundException;
-import ru.practicum.ewm.request.dto.RequestDto;
+import ru.practicum.ewm.request.dto.RequestDTO;
 import ru.practicum.ewm.request.mapper.RequestMapper;
 import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.request.repository.RequestRepository;
@@ -20,6 +20,7 @@ import ru.practicum.ewm.utils.RequestStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.Constants.EVENT_NOT_FOUND;
 import static ru.practicum.ewm.utils.RequestStatus.CANCELED;
 import static ru.practicum.ewm.utils.RequestStatus.CONFIRMED;
 import static ru.practicum.ewm.utils.RequestStatus.PENDING;
@@ -28,7 +29,6 @@ import static ru.practicum.ewm.utils.RequestStatus.PENDING;
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
-
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
@@ -37,23 +37,24 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDto addRequest(Long userId, Long eventId) {
+    public RequestDTO addRequest(Long userId, Long eventId) {
+        log.debug("Adding request from user ID{} to event ID{}", userId, eventId);
         User user = getUserIfExist(userId);
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
-                new EntityNotFoundException("Событие не найдено"));
+                new NotFoundException(String.format(EVENT_NOT_FOUND, eventId)));
         if (event.getInitiator().getId().equals(userId)) {
-            throw new ConflictException("Менеджер мероприятий не может сделать запрос на это мероприятие");
+            throw new ConflictException("The event manager is unable to make a request for his event");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new ConflictException("Событие с id=" + eventId + " не опубликовано");
+            throw new ConflictException(String.format("Event ID%d still not published", eventId));
         }
         if (requestRepository.existsByEventIdAndRequesterId(eventId, userId)) {
-            throw new ConflictException("Пользователь с id=" + userId + " уже отправил запрос на участие в событии с id=" + eventId);
+            throw new ConflictException(String.format("User ID%d already send request on event ID%d", userId, eventId));
         }
-        requestRepository.findAll();
+        List<Request> list = requestRepository.findAll();
         Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit() > 0 && event.getParticipantLimit() <= confirmedRequests) {
-            throw new ConflictException("Лимит участников достигнут");
+            throw new ConflictException("Limit of the participants is already reached");
         }
         RequestStatus status;
         status = event.getRequestModeration() ? PENDING : CONFIRMED;
@@ -64,27 +65,29 @@ public class RequestServiceImpl implements RequestService {
                 .requester(user)
                 .status(status)
                 .build();
-        return requestMapper.toRequestDto(requestRepository.save(request));
+        return requestMapper.toRequestDTO(requestRepository.save(request));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RequestDto> getAllRequests(Long userId) {
+    public List<RequestDTO> getAllRequests(Long userId) {
+        log.debug(String.format("Getting requests of user ID%d", userId));
         getUserIfExist(userId);
-        return requestMapper.toRequestDto(requestRepository.findAllByRequesterId(userId));
+        return requestMapper.toRequestDTO(requestRepository.findAllByRequesterId(userId));
     }
 
     @Override
-    public RequestDto cancelRequest(Long userId, Long requestId) {
+    public RequestDTO cancelRequest(Long userId, Long requestId) {
+        log.debug(String.format("Canceling request ID%d", requestId));
         getUserIfExist(userId);
         Request request = requestRepository.findById(requestId).orElseThrow(() ->
-                new EntityNotFoundException("Запрос с id=" + requestId + " не найден"));
+                new NotFoundException(String.format("Request ID%d doesn't exist", requestId)));
         request.setStatus(CANCELED);
-        return requestMapper.toRequestDto(requestRepository.save(request));
+        return requestMapper.toRequestDTO(requestRepository.save(request));
     }
 
     private User getUserIfExist(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
-                new EntityNotFoundException("Пользователь с id=" + userId + " не найден"));
+                new NotFoundException("Юзер не найден"));
     }
 }
