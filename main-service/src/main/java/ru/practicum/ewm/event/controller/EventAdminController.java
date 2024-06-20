@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
@@ -34,15 +35,22 @@ public class EventAdminController {
     private final EventService eventService;
 
     @GetMapping
-    public List<FullEventDto> getEventsByAdmin(@RequestParam(defaultValue = "") List<Long> usersIds,
-                                               @RequestParam(defaultValue = "") List<EventState> states,
-                                               @RequestParam(defaultValue = "") List<Long> eventsIds,
-                                               @RequestParam(required = false)
-                                               @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime rangeStart,
-                                               @RequestParam(required = false)
-                                               @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime rangeEnd,
+    public List<FullEventDto> getEventsByAdmin(@RequestParam(required = false, defaultValue = "") List<Long> usersIds,
+                                               @RequestParam(required = false, defaultValue = "") List<EventState> states,
+                                               @RequestParam(required = false, defaultValue = "") List<Long> eventsIds,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime rangeStart,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime rangeEnd,
                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                @RequestParam(defaultValue = "10") @Positive int size) {
+        if (usersIds == null) {
+            usersIds = Collections.emptyList();
+        }
+        if (states == null) {
+            states = Collections.emptyList();
+        }
+        if (eventsIds == null) {
+            eventsIds = Collections.emptyList();
+        }
         return eventService.getEventsByAdmin(usersIds, states, eventsIds, rangeStart, rangeEnd, PageRequest.of(from / size, size));
     }
 
