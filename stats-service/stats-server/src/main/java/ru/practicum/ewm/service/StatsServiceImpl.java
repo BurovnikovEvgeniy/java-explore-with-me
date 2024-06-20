@@ -1,42 +1,51 @@
 package ru.practicum.ewm.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.EndpointHit;
 import ru.practicum.ewm.ViewStats;
 import ru.practicum.ewm.mapper.StatMapper;
+import ru.practicum.ewm.model.Stat;
 import ru.practicum.ewm.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
-    private final StatsRepository statRepository;
+    private final StatsRepository statsRepository;
     private final StatMapper mapper;
 
     @Override
     @Transactional
-    public EndpointHit saveHit(EndpointHit hit) {
-        return mapper.toEndpointHit(statRepository.save(mapper.toStat(hit)));
+    public EndpointHit addStat(EndpointHit hit) {
+        Stat stat = statsRepository.save(mapper.toStat(hit));
+        log.info("stat saved successfully");
+        return mapper.toEndpointHit(stat);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ViewStats> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         if (uris.isEmpty()) {
             if (unique) {
-                return statRepository.findAllUniqueStats(start, end);
+                log.info("getStats uris empty, unique = true");
+                return statsRepository.findAllStatsUniqueIp(start, end);
             } else {
-                return statRepository.findAllStats(start, end);
+                log.info("getStats uris empty, unique = false");
+                return statsRepository.findAllStats(start, end);
             }
         } else {
             if (unique) {
-                return statRepository.findAllUniqueStatsWithUris(uris.get(0), start, end);
+                log.info("getStats uris not empty, unique = true");
+                return statsRepository.findAllStatsUniqueIpUrisIn(uris.get(0), start, end);
             } else {
-                return statRepository.findAllStatsWithUris(uris, start, end);
+                log.info("getStats uris not empty, unique = false");
+                return statsRepository.findAllStatsUrisIn(uris, start, end);
             }
         }
     }

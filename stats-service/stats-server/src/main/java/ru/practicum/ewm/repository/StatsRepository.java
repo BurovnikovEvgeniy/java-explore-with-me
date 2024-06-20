@@ -8,33 +8,32 @@ import ru.practicum.ewm.model.Stat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface StatsRepository extends JpaRepository<Stat, Integer> {
-
+public interface StatsRepository extends JpaRepository<Stat, Long> {
     @Query("SELECT new ru.practicum.ewm.ViewStats(s.app, s.uri, COUNT(s.uri)) " +
-            "FROM Stat as s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "FROM Stat s " +
+            "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.uri) DESC")
     List<ViewStats> findAllStats(LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT new ru.practicum.ewm.ViewStats(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
-            "FROM Stat as s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "FROM Stat s " +
+            "WHERE s.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
-    List<ViewStats> findAllUniqueStats(LocalDateTime start, LocalDateTime end);
+    List<ViewStats> findAllStatsUniqueIp(LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT new ru.practicum.ewm.ViewStats(s.app, s.uri, COUNT(s.uri)) " +
-            "FROM Stat as s " +
-            "WHERE s.uri IN :uris AND s.timestamp BETWEEN :start AND :end " +
+            "FROM Stat s " +
+            "WHERE s.uri IN ?1 AND s.timestamp BETWEEN ?2 AND ?3 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.uri) DESC")
-    List<ViewStats> findAllStatsWithUris(List<String> uris, LocalDateTime start, LocalDateTime end);
+    List<ViewStats> findAllStatsUrisIn(List<String> uris, LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT new ru.practicum.ewm.ViewStats(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
             "FROM Stat s " +
-            "WHERE s.uri LIKE :uris AND s.timestamp BETWEEN :start AND :end " +
+            "WHERE s.uri LIKE ?1 AND s.timestamp BETWEEN ?2 AND ?3 " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
-    List<ViewStats> findAllUniqueStatsWithUris(String uris, LocalDateTime start, LocalDateTime end);
+    List<ViewStats> findAllStatsUniqueIpUrisIn(String uris, LocalDateTime start, LocalDateTime end);
 }
