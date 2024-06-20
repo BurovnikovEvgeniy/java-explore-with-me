@@ -39,18 +39,17 @@ public class EventPrivateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDTO,
-                                 @PathVariable @Positive Long userId) {
-        if (newEventDTO.getPaid() == null) {
-            newEventDTO.setPaid(false);
+    public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDto, @PathVariable @Positive Long userId) {
+        if (newEventDto.getPaid() == null) {
+            newEventDto.setPaid(false);
         }
-        if (newEventDTO.getParticipantLimit() == null) {
-            newEventDTO.setParticipantLimit(0L);
+        if (newEventDto.getParticipantLimit() == null) {
+            newEventDto.setParticipantLimit(0L);
         }
-        if (newEventDTO.getRequestModeration() == null) {
-            newEventDTO.setRequestModeration(true);
+        if (newEventDto.getRequestModeration() == null) {
+            newEventDto.setRequestModeration(true);
         }
-        return eventService.addEvent(newEventDTO, userId);
+        return eventService.addEvent(newEventDto, userId);
     }
 
     @GetMapping("/{eventId}")

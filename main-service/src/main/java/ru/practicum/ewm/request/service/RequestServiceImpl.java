@@ -49,7 +49,6 @@ public class RequestServiceImpl implements RequestService {
         if (requestRepository.existsByEventIdAndRequesterId(eventId, userId)) {
             throw new ConflictException("Пользователь с id=" + userId + " уже отправил запрос на событие с id=" + eventId);
         }
-        List<Request> list = requestRepository.findAll();
         Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit() > 0 && event.getParticipantLimit() <= confirmedRequests) {
             throw new ConflictException("Лимит участников уже достигнут");
@@ -69,7 +68,6 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(readOnly = true)
     public List<RequestDto> getAllRequests(Long userId) {
-//        getUserIfExist(userId);
         return requestMapper.toRequestDto(requestRepository.findAllByRequesterId(userId));
     }
 
