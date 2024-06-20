@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import ru.practicum.ewm.category.dto.CategoryDTO;
-import ru.practicum.ewm.location.dto.LocationDTO;
-import ru.practicum.ewm.user.dto.UserShortDTO;
+import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.location.dto.LocationDto;
+import ru.practicum.ewm.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
@@ -17,15 +17,15 @@ import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShortEventDTO {
+public class ShortEventDto {
     private String annotation;
-    private CategoryDTO category;
+    private CategoryDto category;
     private Long confirmedRequests;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     private LocalDateTime eventDate;
     private Long id;
-    private UserShortDTO initiator;
-    private LocationDTO location;
+    private UserShortDto initiator;
+    private LocationDto location;
     private String title;
     private Long views;
     private Boolean paid;

@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewCategoryDTO {
+public class NewCategoryDto {
     @NotBlank
     @Size(min = 1, max = 50)
     private String name;

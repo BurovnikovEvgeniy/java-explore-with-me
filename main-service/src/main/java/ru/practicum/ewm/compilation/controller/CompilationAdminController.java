@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.compilation.dto.CompilationDTO;
-import ru.practicum.ewm.compilation.dto.NewCompilationDTO;
-import ru.practicum.ewm.compilation.dto.UpdateCompilationDTO;
+import ru.practicum.ewm.compilation.dto.CompilationDto;
+import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.service.CompilationService;
 
 import javax.validation.Valid;
@@ -32,7 +32,7 @@ public class CompilationAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CompilationDTO addCompilation(@RequestBody @Valid NewCompilationDTO newCompilationDTO) {
+    CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDTO) {
         log.info("Response from POST request on {}", COMPILATIONS_ADMIN_URI);
         if (newCompilationDTO.getPinned() == null) newCompilationDTO.setPinned(false);
         return compilationService.addCompilation(newCompilationDTO);
@@ -46,7 +46,7 @@ public class CompilationAdminController {
     }
 
     @PatchMapping(COMPILATION_ID_URI)
-    CompilationDTO updateCompilation(@RequestBody @Valid UpdateCompilationDTO updateCompilationDTO,
+    CompilationDto updateCompilation(@RequestBody @Valid UpdateCompilationDto updateCompilationDTO,
                                      @PathVariable Long compId) {
         log.info("Response from PATCH request on {}/{}", COMPILATIONS_ADMIN_URI, compId);
         return compilationService.updateCompilation(updateCompilationDTO, compId);

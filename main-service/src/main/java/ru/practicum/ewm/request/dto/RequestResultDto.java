@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.utils.RequestStatus;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestUpdateDTO {
-    @NotNull
-    private List<Long> requestIds;
-    @NotNull
-    private RequestStatus status;
+public class RequestResultDto {
+    private List<RequestDto> confirmedRequests;
+    private List<RequestDto> rejectedRequests;
 }

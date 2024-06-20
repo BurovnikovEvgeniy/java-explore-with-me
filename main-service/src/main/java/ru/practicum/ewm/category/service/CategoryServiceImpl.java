@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.category.dto.CategoryDTO;
-import ru.practicum.ewm.category.dto.NewCategoryDTO;
+import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.category.dto.NewCategoryDto;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
@@ -25,11 +25,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDTO addCategory(NewCategoryDTO newCategoryDTO) {
+    public CategoryDto addCategory(NewCategoryDto newCategoryDTO) {
         log.debug("Adding category {}", newCategoryDTO);
         Category category = categoryRepository.save(categoryMapper.toCategory(newCategoryDTO));
         log.debug("Category is added {}", category);
-        return categoryMapper.toCategoryDTO(category);
+        return categoryMapper.toCategoryDto(category);
     }
 
     @Override
@@ -43,28 +43,28 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryDTO updateCategory(Long catId, NewCategoryDTO newCategoryDTO) {
+    public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDTO) {
         log.debug("Updating category ID{}", catId);
         Category category = getCategoryIfExist(catId);
         category.setName(newCategoryDTO.getName());
         Category updatedCategory = categoryRepository.save(category);
         log.debug("Category is updated {}", category);
-        return categoryMapper.toCategoryDTO(updatedCategory);
+        return categoryMapper.toCategoryDto(updatedCategory);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDTO getCategory(Long catId) {
+    public CategoryDto getCategory(Long catId) {
         log.debug("Getting category ID{}", catId);
         Category category = getCategoryIfExist(catId);
-        return categoryMapper.toCategoryDTO(category);
+        return categoryMapper.toCategoryDto(category);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryDTO> getAllCategories(PageRequest pageRequest) {
+    public List<CategoryDto> getAllCategories(PageRequest pageRequest) {
         log.debug("Getting list of categories");
-        return categoryMapper.toCategoryDTO(categoryRepository.findAll(pageRequest).toList());
+        return categoryMapper.toCategoryDto(categoryRepository.findAll(pageRequest).toList());
     }
 
     public Category getCategoryIfExist(Long catId) {

@@ -6,8 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.error.NotFoundException;
-import ru.practicum.ewm.user.dto.NewUserDTO;
-import ru.practicum.ewm.user.dto.UserDTO;
+import ru.practicum.ewm.user.dto.NewUserDto;
+import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
@@ -23,11 +23,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO addUser(NewUserDTO newUserDTO) {
+    public UserDto addUser(NewUserDto newUserDTO) {
         log.debug("Adding user {}", newUserDTO);
         User user = userRepository.save(userMapper.toUser(newUserDTO));
         log.debug("User is added {}", user);
-        return userMapper.toUserDTO(user);
+        return userMapper.toUserDto(user);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDTO> getUsers(List<Long> ids, PageRequest pageRequest) {
+    public List<UserDto> getUsers(List<Long> ids, PageRequest pageRequest) {
         log.debug("Getting list of users");
-        return (ids.isEmpty()) ? userMapper.toUserDTO(userRepository.findAll(pageRequest).toList())
-                : userMapper.toUserDTO(userRepository.findAllByIdIn(ids, pageRequest));
+        return (ids.isEmpty()) ? userMapper.toUserDto(userRepository.findAll(pageRequest).toList())
+                : userMapper.toUserDto(userRepository.findAllByIdIn(ids, pageRequest));
     }
 }

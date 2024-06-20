@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.request.dto.RequestDTO;
+import ru.practicum.ewm.request.dto.RequestDto;
 import ru.practicum.ewm.request.service.RequestService;
 
 import javax.validation.constraints.Positive;
@@ -30,20 +30,20 @@ public class RequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RequestDTO addRequest(@PathVariable @Positive Long userId,
+    public RequestDto addRequest(@PathVariable @Positive Long userId,
                                  @RequestParam @Positive Long eventId) {
         log.info("Response from POST request on {}", REQUESTS_PRIVATE_URI);
         return requestService.addRequest(userId, eventId);
     }
 
     @GetMapping
-    public List<RequestDTO> getAllRequests(@PathVariable @Positive Long userId) {
+    public List<RequestDto> getAllRequests(@PathVariable @Positive Long userId) {
         log.info("Response from GET request on {}", REQUESTS_PRIVATE_URI);
         return requestService.getAllRequests(userId);
     }
 
     @PatchMapping("/{requestId}/cancel")
-    public RequestDTO cancelRequest(@PathVariable @Positive Long userId,
+    public RequestDto cancelRequest(@PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long requestId) {
         log.info("Response from GET request on {}", REQUESTS_PRIVATE_URI);
         return requestService.cancelRequest(userId, requestId);

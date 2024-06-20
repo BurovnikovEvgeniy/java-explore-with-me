@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.compilation.dto.CompilationDTO;
+import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.service.CompilationService;
 
 import java.util.List;
@@ -27,13 +27,13 @@ public class CompilationPublicController {
     private final CompilationService compilationService;
 
     @GetMapping(COMPILATION_ID_URI)
-    public CompilationDTO getCompilation(@PathVariable Long compId) {
+    public CompilationDto getCompilation(@PathVariable Long compId) {
         log.info("Response from POST request on {}/{}", COMPILATIONS_ADMIN_URI, compId);
         return compilationService.getCompilation(compId);
     }
 
     @GetMapping
-    public List<CompilationDTO> getCompilations(@RequestParam(required = false) Boolean pined,
+    public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pined,
                                                 @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
         log.info("Response from POST request on {}", COMPILATIONS_ADMIN_URI);

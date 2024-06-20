@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.user.dto.NewUserDTO;
-import ru.practicum.ewm.user.dto.UserDTO;
+import ru.practicum.ewm.user.dto.NewUserDto;
+import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.service.UserService;
 
 import javax.validation.Valid;
@@ -35,7 +35,7 @@ public class UserAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO addUser(@RequestBody @Valid NewUserDTO newUser) {
+    public UserDto addUser(@RequestBody @Valid NewUserDto newUser) {
         return userService.addUser(newUser);
     }
 
@@ -47,7 +47,7 @@ public class UserAdminController {
     }
 
     @GetMapping
-    public List<UserDTO> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
+    public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                   @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Response from GET request on {}", USERS_ADMIN_URI);

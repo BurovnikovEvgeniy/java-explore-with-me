@@ -15,7 +15,7 @@ import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FullEventDTO extends ShortEventDTO {
+public class FullEventDto extends ShortEventDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     private LocalDateTime createdOn;
     private Integer participantLimit;

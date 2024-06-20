@@ -1,20 +1,20 @@
 package ru.practicum.ewm.compilation.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.ewm.compilation.dto.CompilationDTO;
-import ru.practicum.ewm.compilation.dto.NewCompilationDTO;
-import ru.practicum.ewm.compilation.dto.UpdateCompilationDTO;
+import ru.practicum.ewm.compilation.dto.CompilationDto;
+import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 
 import java.util.List;
 
 public interface CompilationService {
-    CompilationDTO addCompilation(NewCompilationDTO newCompilationDTO);
+    CompilationDto addCompilation(NewCompilationDto newCompilationDTO);
 
     void deleteCompilation(Long compId);
 
-    CompilationDTO updateCompilation(UpdateCompilationDTO updateCompilationDTO, Long compId);
+    CompilationDto updateCompilation(UpdateCompilationDto updateCompilationDto, Long compId);
 
-    CompilationDTO getCompilation(Long compId);
+    CompilationDto getCompilation(Long compId);
 
-    List<CompilationDTO> getCompilations(Boolean pined, PageRequest pageRequest);
+    List<CompilationDto> getCompilations(Boolean pined, PageRequest pageRequest);
 }

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocationDTO {
+public class LocationDto {
     @NotNull
     private float lat;
     @NotNull

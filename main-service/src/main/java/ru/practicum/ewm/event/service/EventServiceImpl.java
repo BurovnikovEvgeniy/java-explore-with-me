@@ -13,19 +13,19 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ConflictException;
 import ru.practicum.ewm.error.NotFoundException;
-import ru.practicum.ewm.event.dto.FullEventDTO;
-import ru.practicum.ewm.event.dto.NewEventDTO;
-import ru.practicum.ewm.event.dto.ShortEventDTO;
-import ru.practicum.ewm.event.dto.UpdateEventDTO;
+import ru.practicum.ewm.event.dto.FullEventDto;
+import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.ShortEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventDto;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.location.mapper.LocationMapper;
 import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.location.repository.LocationRepository;
-import ru.practicum.ewm.request.dto.RequestDTO;
-import ru.practicum.ewm.request.dto.RequestResultDTO;
-import ru.practicum.ewm.request.dto.RequestUpdateDTO;
+import ru.practicum.ewm.request.dto.RequestDto;
+import ru.practicum.ewm.request.dto.RequestResultDto;
+import ru.practicum.ewm.request.dto.RequestUpdateDto;
 import ru.practicum.ewm.request.mapper.RequestMapper;
 import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.request.repository.RequestRepository;
@@ -70,7 +70,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public FullEventDTO addEvent(NewEventDTO newEventDTO, Long userId) {
+    public FullEventDto addEvent(NewEventDto newEventDTO, Long userId) {
         log.debug("Adding event {}", newEventDTO);
         User owner = getUser(userId);
         Category category = getCategory(newEventDTO.getCategory());
@@ -84,34 +84,34 @@ public class EventServiceImpl implements EventService {
         event.setViews(0L);
         event.setConfirmedRequests(0L);
         log.debug("Event is added {}", event);
-        return eventMapper.toFullEventDTO(event);
+        return eventMapper.toFullEventDto(event);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FullEventDTO getEvent(Long userId, Long eventId) {
+    public FullEventDto getEvent(Long userId, Long eventId) {
         log.debug("Getting event ID{} by user ID{}", eventId, userId);
         getUser(userId);
         Event event = getEvent(eventId);
         event = fillWithEventViews(List.of(event)).get(0);
         event = fillWithConfirmedRequests(List.of(event)).get(0);
-        return eventMapper.toFullEventDTO(event);
+        return eventMapper.toFullEventDto(event);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ShortEventDTO> getAllEvents(Long userId, PageRequest pageRequest) {
+    public List<ShortEventDto> getAllEvents(Long userId, PageRequest pageRequest) {
         log.debug("Getting events by user ID{}", userId);
         getUser(userId);
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pageRequest);
         events = fillWithEventViews(events);
         events = fillWithConfirmedRequests(events);
-        return eventMapper.toShortEventDTO(events);
+        return eventMapper.toShortEventDto(events);
     }
 
     @Override
     @Transactional
-    public FullEventDTO updateEvent(UpdateEventDTO updateEventDTO, Long userId, Long eventId) {
+    public FullEventDto updateEvent(UpdateEventDto updateEventDTO, Long userId, Long eventId) {
         log.debug("Updating event ID{}", eventId);
         getUser(userId);
         Event event = getEvent(eventId);
@@ -134,21 +134,21 @@ public class EventServiceImpl implements EventService {
         event = eventRepository.save(updatedEvent);
         event.setViews(0L);
         event.setConfirmedRequests(0L);
-        return eventMapper.toFullEventDTO(event);
+        return eventMapper.toFullEventDto(event);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RequestDTO> getRequestsByEventId(Long userId, Long eventId) {
+    public List<RequestDto> getRequestsByEventId(Long userId, Long eventId) {
         log.debug("Getting requests of event ID{}", eventId);
         getUser(userId);
         getEvent(eventId);
-        return requestMapper.toRequestDTO(requestRepository.findAllByEventId(eventId));
+        return requestMapper.toRequestDto(requestRepository.findAllByEventId(eventId));
     }
 
     @Override
     @Transactional
-    public RequestResultDTO updateRequestsStatus(RequestUpdateDTO requestUpdateDTO, Long userId, Long eventId) {
+    public RequestResultDto updateRequestsStatus(RequestUpdateDto requestUpdateDTO, Long userId, Long eventId) {
         log.debug("Updating requests {}", requestUpdateDTO.getRequestIds());
         getUser(userId);
         Event event = getEvent(eventId);
@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
         Long numOfConfirmedRequests = requestRepository.countByEventIdAndStatus(eventId, CONFIRMED);
         if (event.getParticipantLimit().equals(numOfConfirmedRequests))
             throw new ConflictException("Limit of participant is reached");
-        RequestResultDTO requestResultDTO = RequestResultDTO
+        RequestResultDto requestResultDTO = RequestResultDto
                 .builder()
                 .confirmedRequests(new ArrayList<>())
                 .rejectedRequests(new ArrayList<>())
@@ -166,16 +166,16 @@ public class EventServiceImpl implements EventService {
         List<Request> requestsToUpdate = requestRepository.findAllByIdIn(requestUpdateDTO.getRequestIds());
         for (Request request : requestsToUpdate) {
             if (event.getParticipantLimit().equals(numOfConfirmedRequests)) break;
-            RequestDTO requestDTO;
+            RequestDto requestDTO;
             switch (requestUpdateDTO.getStatus()) {
                 case REJECTED:
                     request.setStatus(REJECTED);
-                    requestDTO = requestMapper.toRequestDTO(requestRepository.save(request));
+                    requestDTO = requestMapper.toRequestDto(requestRepository.save(request));
                     requestResultDTO.getRejectedRequests().add(requestDTO);
                     break;
                 case CONFIRMED:
                     request.setStatus(CONFIRMED);
-                    requestDTO = requestMapper.toRequestDTO(requestRepository.save(request));
+                    requestDTO = requestMapper.toRequestDto(requestRepository.save(request));
                     requestResultDTO.getConfirmedRequests().add(requestDTO);
                     numOfConfirmedRequests++;
                     break;
@@ -188,7 +188,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<FullEventDTO> getEventsByAdmin(List<Long> usersIds, List<EventState> states,
+    public List<FullEventDto> getEventsByAdmin(List<Long> usersIds, List<EventState> states,
                                                List<Long> categoriesIds, LocalDateTime start, LocalDateTime end,
                                                PageRequest pageRequest) {
         log.debug("Getting events by admin");
@@ -207,14 +207,14 @@ public class EventServiceImpl implements EventService {
         events = fillWithConfirmedRequests(events);
         events = fillWithEventViews(events);
         return events.stream()
-                .map(eventMapper::toFullEventDTO)
-                .sorted(Comparator.comparing(FullEventDTO::getId, Comparator.reverseOrder()))
+                .map(eventMapper::toFullEventDto)
+                .sorted(Comparator.comparing(FullEventDto::getId, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public FullEventDTO updateEventByAdmin(UpdateEventDTO updateEventDTO, Long eventId) {
+    public FullEventDto updateEventByAdmin(UpdateEventDto updateEventDTO, Long eventId) {
         log.debug(String.format("Updating event ID%d by admin", eventId));
         Event event = checkEventForUpdate(getEvent(eventId), updateEventDTO);
         if (event.getState().equals(CANCELED)) throw new ConflictException("Not possible to update canceled event");
@@ -235,12 +235,12 @@ public class EventServiceImpl implements EventService {
         event.setViews(0L);
         event.setConfirmedRequests(0L);
         log.debug(String.format("Event ID%d updated  by admin %s", eventId, updatedEvent));
-        return eventMapper.toFullEventDTO(updatedEvent);
+        return eventMapper.toFullEventDto(updatedEvent);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ShortEventDTO> getPublishedEvents(String text, List<Long> categories, Boolean paid,
+    public List<ShortEventDto> getPublishedEvents(String text, List<Long> categories, Boolean paid,
                                                   LocalDateTime start, LocalDateTime end,
                                                   Boolean onlyAvailable, EventSort sort, PageRequest pageRequest,
                                                   HttpServletRequest request) {
@@ -265,28 +265,28 @@ public class EventServiceImpl implements EventService {
                 .filter(event -> event.getParticipantLimit() > event.getConfirmedRequests())
                 .collect(Collectors.toList()) : events;
         events = fillWithEventViews(events);
-        if (sort == null) return eventMapper.toShortEventDTO(events);
+        if (sort == null) return eventMapper.toShortEventDto(events);
         switch (sort) {
             case VIEWS:
                 return events
                         .stream()
                         .sorted(Comparator.comparing(Event::getViews))
-                        .map(eventMapper::toShortEventDTO)
+                        .map(eventMapper::toShortEventDto)
                         .collect(Collectors.toList());
             case EVENT_DATE:
                 return events
                         .stream()
                         .sorted(Comparator.comparing(Event::getEventDate))
-                        .map(eventMapper::toShortEventDTO)
+                        .map(eventMapper::toShortEventDto)
                         .collect(Collectors.toList());
             default:
-                return eventMapper.toShortEventDTO(events);
+                return eventMapper.toShortEventDto(events);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FullEventDTO getPublishedEventById(Long id, HttpServletRequest request) {
+    public FullEventDto getPublishedEventById(Long id, HttpServletRequest request) {
         log.debug("Getting published event ID{}", id);
         Event event = getEvent(id);
         if (!event.getState().equals(PUBLISHED))
@@ -294,7 +294,7 @@ public class EventServiceImpl implements EventService {
         addStats(request);
         event = fillWithEventViews(List.of(event)).get(0);
         event = fillWithConfirmedRequests(List.of(event)).get(0);
-        return eventMapper.toFullEventDTO(event);
+        return eventMapper.toFullEventDto(event);
     }
 
     private void addStats(HttpServletRequest request) {
@@ -348,7 +348,7 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    private Event checkEventForUpdate(Event event, UpdateEventDTO updateEventDTO) {
+    private Event checkEventForUpdate(Event event, UpdateEventDto updateEventDTO) {
         if (event.getState().equals(PUBLISHED))
             throw new ConflictException("Published events cannot be changed");
         if (updateEventDTO.getAnnotation() != null && !updateEventDTO.getAnnotation()

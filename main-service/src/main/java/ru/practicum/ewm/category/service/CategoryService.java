@@ -1,19 +1,19 @@
 package ru.practicum.ewm.category.service;
 
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.ewm.category.dto.CategoryDTO;
-import ru.practicum.ewm.category.dto.NewCategoryDTO;
+import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.category.dto.NewCategoryDto;
 
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDTO addCategory(NewCategoryDTO newCategoryDTO);
+    CategoryDto addCategory(NewCategoryDto newCategoryDTO);
 
     void deleteCategory(Long catId);
 
-    CategoryDTO updateCategory(Long catId, NewCategoryDTO newCategoryDTO);
+    CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDTO);
 
-    CategoryDTO getCategory(Long catId);
+    CategoryDto getCategory(Long catId);
 
-    List<CategoryDTO> getAllCategories(PageRequest pageRequest);
+    List<CategoryDto> getAllCategories(PageRequest pageRequest);
 }

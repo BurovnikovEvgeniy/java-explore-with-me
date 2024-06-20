@@ -15,7 +15,7 @@ import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDTO {
+public class RequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     private LocalDateTime created;
     private Long event;

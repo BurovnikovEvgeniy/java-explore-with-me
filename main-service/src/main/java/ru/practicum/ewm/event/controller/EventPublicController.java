@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.error.ValidationException;
-import ru.practicum.ewm.event.dto.FullEventDTO;
-import ru.practicum.ewm.event.dto.ShortEventDTO;
+import ru.practicum.ewm.event.dto.FullEventDto;
+import ru.practicum.ewm.event.dto.ShortEventDto;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.utils.EventSort;
 
@@ -35,7 +35,7 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<ShortEventDTO> getPublishedEvents(@RequestParam(defaultValue = "") String text,
+    public List<ShortEventDto> getPublishedEvents(@RequestParam(defaultValue = "") String text,
                                                   @RequestParam(defaultValue = "") List<Long> categories,
                                                   @RequestParam(required = false) Boolean paid,
                                                   @RequestParam(required = false)
@@ -55,7 +55,7 @@ public class EventPublicController {
     }
 
     @GetMapping(ID_URI)
-    public FullEventDTO getPublishedEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
+    public FullEventDto getPublishedEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
         log.info("Response from GET request on {}", EVENTS_PUBLIC_URI + ID_URI);
         return eventService.getPublishedEventById(id, request);
     }

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.event.dto.FullEventDTO;
-import ru.practicum.ewm.event.dto.UpdateEventDTO;
+import ru.practicum.ewm.event.dto.FullEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventDto;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.utils.EventState;
 
@@ -37,7 +37,7 @@ public class EventAdminController {
     private final EventService eventService;
 
     @GetMapping
-    public List<FullEventDTO> getEventsByAdmin(@RequestParam(defaultValue = "") List<Long> usersIds,
+    public List<FullEventDto> getEventsByAdmin(@RequestParam(defaultValue = "") List<Long> usersIds,
                                                @RequestParam(defaultValue = "") List<EventState> states,
                                                @RequestParam(defaultValue = "") List<Long> eventsIds,
                                                @RequestParam(required = false)
@@ -52,7 +52,7 @@ public class EventAdminController {
     }
 
     @PatchMapping(EVENT_ID_URI)
-    public FullEventDTO updateEventByAdmin(@RequestBody @Valid UpdateEventDTO updateEventDTO,
+    public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                            @PathVariable Long eventId) {
         log.info("Response from PATCH request on {}", EVENTS_ADMIN_URI + EVENT_ID_URI);
         if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());

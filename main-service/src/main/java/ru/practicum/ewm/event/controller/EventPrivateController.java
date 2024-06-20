@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.event.dto.FullEventDTO;
-import ru.practicum.ewm.event.dto.NewEventDTO;
-import ru.practicum.ewm.event.dto.ShortEventDTO;
-import ru.practicum.ewm.event.dto.UpdateEventDTO;
+import ru.practicum.ewm.event.dto.FullEventDto;
+import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.ShortEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventDto;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.request.dto.RequestDTO;
-import ru.practicum.ewm.request.dto.RequestResultDTO;
-import ru.practicum.ewm.request.dto.RequestUpdateDTO;
+import ru.practicum.ewm.request.dto.RequestDto;
+import ru.practicum.ewm.request.dto.RequestResultDto;
+import ru.practicum.ewm.request.dto.RequestUpdateDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -43,7 +43,7 @@ public class EventPrivateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FullEventDTO addEvent(@RequestBody @Valid NewEventDTO newEventDTO,
+    public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDTO,
                                  @PathVariable @Positive Long userId) {
         log.info("Response from POST request on {}", EVENTS_PRIVATE_URI);
         if (newEventDTO.getEventDate() != null) checkEventStart(newEventDTO.getEventDate());
@@ -54,14 +54,14 @@ public class EventPrivateController {
     }
 
     @GetMapping(EVENT_ID_URI)
-    public FullEventDTO getEvent(@PathVariable @Positive Long userId,
+    public FullEventDto getEvent(@PathVariable @Positive Long userId,
                                  @PathVariable @Positive Long eventId) {
         log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
         return eventService.getEvent(userId, eventId);
     }
 
     @GetMapping
-    public List<ShortEventDTO> getAllEvents(@PathVariable @Positive Long userId,
+    public List<ShortEventDto> getAllEvents(@PathVariable @Positive Long userId,
                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                             @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Response from GET request on {}", EVENTS_PRIVATE_URI);
@@ -69,7 +69,7 @@ public class EventPrivateController {
     }
 
     @PatchMapping(EVENT_ID_URI)
-    public FullEventDTO updateEvent(@RequestBody @Valid UpdateEventDTO updateEventDTO,
+    public FullEventDto updateEvent(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
         log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
@@ -78,14 +78,14 @@ public class EventPrivateController {
     }
 
     @GetMapping(EVENT_ID_REQUESTS_URI)
-    public List<RequestDTO> getRequestsByEventId(@PathVariable @Positive Long userId,
+    public List<RequestDto> getRequestsByEventId(@PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
         log.info("Response from GET request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);
         return eventService.getRequestsByEventId(userId, eventId);
     }
 
     @PatchMapping(EVENT_ID_REQUESTS_URI)
-    public RequestResultDTO updateRequestsStatus(@RequestBody @Valid RequestUpdateDTO requestUpdateDTO,
+    public RequestResultDto updateRequestsStatus(@RequestBody @Valid RequestUpdateDto requestUpdateDTO,
                                                  @PathVariable @Positive Long userId,
                                                  @PathVariable @Positive Long eventId) {
         log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_REQUESTS_URI);

@@ -8,7 +8,7 @@ import ru.practicum.ewm.error.ConflictException;
 import ru.practicum.ewm.error.NotFoundException;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.request.dto.RequestDTO;
+import ru.practicum.ewm.request.dto.RequestDto;
 import ru.practicum.ewm.request.mapper.RequestMapper;
 import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.request.repository.RequestRepository;
@@ -37,7 +37,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDTO addRequest(Long userId, Long eventId) {
+    public RequestDto addRequest(Long userId, Long eventId) {
         log.debug("Adding request from user ID{} to event ID{}", userId, eventId);
         User user = getUserIfExist(userId);
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
@@ -65,25 +65,25 @@ public class RequestServiceImpl implements RequestService {
                 .requester(user)
                 .status(status)
                 .build();
-        return requestMapper.toRequestDTO(requestRepository.save(request));
+        return requestMapper.toRequestDto(requestRepository.save(request));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RequestDTO> getAllRequests(Long userId) {
+    public List<RequestDto> getAllRequests(Long userId) {
         log.debug(String.format("Getting requests of user ID%d", userId));
         getUserIfExist(userId);
-        return requestMapper.toRequestDTO(requestRepository.findAllByRequesterId(userId));
+        return requestMapper.toRequestDto(requestRepository.findAllByRequesterId(userId));
     }
 
     @Override
-    public RequestDTO cancelRequest(Long userId, Long requestId) {
+    public RequestDto cancelRequest(Long userId, Long requestId) {
         log.debug(String.format("Canceling request ID%d", requestId));
         getUserIfExist(userId);
         Request request = requestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException(String.format("Request ID%d doesn't exist", requestId)));
         request.setStatus(CANCELED);
-        return requestMapper.toRequestDTO(requestRepository.save(request));
+        return requestMapper.toRequestDto(requestRepository.save(request));
     }
 
     private User getUserIfExist(Long userId) {

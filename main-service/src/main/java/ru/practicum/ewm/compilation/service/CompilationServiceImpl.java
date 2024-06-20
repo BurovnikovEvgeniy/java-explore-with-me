@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.compilation.dto.CompilationDTO;
-import ru.practicum.ewm.compilation.dto.NewCompilationDTO;
-import ru.practicum.ewm.compilation.dto.UpdateCompilationDTO;
+import ru.practicum.ewm.compilation.dto.CompilationDto;
+import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
@@ -34,7 +34,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDTO addCompilation(NewCompilationDTO newCompilationDTO) {
+    public CompilationDto addCompilation(NewCompilationDto newCompilationDTO) {
         log.debug("Adding compilation {}", newCompilationDTO);
         Compilation compilation = compilationMapper.toCompilation(newCompilationDTO);
         List<Event> events = newCompilationDTO.getEvents() == null ? new ArrayList<>()
@@ -42,7 +42,7 @@ public class CompilationServiceImpl implements CompilationService {
         events = eventService.fillWithConfirmedRequests(events);
         events = eventService.fillWithEventViews(events);
         compilation.setEvents(new HashSet<>(events));
-        CompilationDTO compilationDTO = compilationMapper.toCompilationDTO(compilationRepository.save(compilation));
+        CompilationDto compilationDTO = compilationMapper.toCompilationDto(compilationRepository.save(compilation));
         log.debug("Added new compilation {}", compilationDTO);
         return compilationDTO;
     }
@@ -57,32 +57,32 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDTO updateCompilation(UpdateCompilationDTO updateCompilationDTO, Long compId) {
+    public CompilationDto updateCompilation(UpdateCompilationDto updateCompilationDto, Long compId) {
         log.debug("Updating compilation ID{}", compId);
         Compilation compilation = getCompilationIfExist(compId);
-        if (updateCompilationDTO.getEvents() != null) {
-            HashSet<Event> events = new HashSet<>(eventRepository.findAllByIdIn(updateCompilationDTO.getEvents()));
+        if (updateCompilationDto.getEvents() != null) {
+            HashSet<Event> events = new HashSet<>(eventRepository.findAllByIdIn(updateCompilationDto.getEvents()));
             compilation.setEvents(events);
         }
-        if (updateCompilationDTO.getPinned() != null) compilation.setPinned(updateCompilationDTO.getPinned());
-        if (updateCompilationDTO.getTitle() != null) compilation.setTitle(updateCompilationDTO.getTitle());
+        if (updateCompilationDto.getPinned() != null) compilation.setPinned(updateCompilationDto.getPinned());
+        if (updateCompilationDto.getTitle() != null) compilation.setTitle(updateCompilationDto.getTitle());
 
-        return compilationMapper.toCompilationDTO(compilationRepository.save(compilation));
+        return compilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CompilationDTO getCompilation(Long compId) {
+    public CompilationDto getCompilation(Long compId) {
         log.debug("Getting compilation ID{}", compId);
-        return compilationMapper.toCompilationDTO(getCompilationIfExist(compId));
+        return compilationMapper.toCompilationDto(getCompilationIfExist(compId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompilationDTO> getCompilations(Boolean pined, PageRequest pageRequest) {
+    public List<CompilationDto> getCompilations(Boolean pined, PageRequest pageRequest) {
         log.debug("Getting compilations");
-        return (pined == null) ? compilationMapper.toCompilationDTO(compilationRepository.findAll(pageRequest).toList())
-                : compilationMapper.toCompilationDTO(compilationRepository.findAllByPinned(pined, pageRequest).toList());
+        return (pined == null) ? compilationMapper.toCompilationDto(compilationRepository.findAll(pageRequest).toList())
+                : compilationMapper.toCompilationDto(compilationRepository.findAllByPinned(pined, pageRequest).toList());
 
     }
 
