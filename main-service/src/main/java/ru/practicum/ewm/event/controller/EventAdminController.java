@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,6 @@ import java.util.List;
 import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
 import static ru.practicum.ewm.utils.Constants.EVENTS_ADMIN_URI;
 import static ru.practicum.ewm.utils.Constants.EVENT_ID_URI;
-import static ru.practicum.ewm.utils.Utilities.checkEventStart;
-import static ru.practicum.ewm.utils.Utilities.fromSizePage;
 
 @Slf4j
 @Validated
@@ -47,15 +46,14 @@ public class EventAdminController {
                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Response from GET request on {}", EVENTS_ADMIN_URI);
-        return eventService.getEventsByAdmin(usersIds, states, eventsIds, rangeStart, rangeEnd,
-                fromSizePage(from, size));
+        return eventService.getEventsByAdmin(usersIds, states, eventsIds, rangeStart, rangeEnd, PageRequest.of(from / size, size));
     }
 
     @PatchMapping(EVENT_ID_URI)
     public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDTO,
                                            @PathVariable Long eventId) {
         log.info("Response from PATCH request on {}", EVENTS_ADMIN_URI + EVENT_ID_URI);
-        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
+//        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
         return eventService.updateEventByAdmin(updateEventDTO, eventId);
     }
 }

@@ -2,6 +2,7 @@ package ru.practicum.ewm.compilation.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,6 @@ import java.util.List;
 import static ru.practicum.ewm.utils.Constants.COMPILATIONS_ADMIN_URI;
 import static ru.practicum.ewm.utils.Constants.COMPILATIONS_PUBLIC_URI;
 import static ru.practicum.ewm.utils.Constants.COMPILATION_ID_URI;
-import static ru.practicum.ewm.utils.Utilities.fromSizePage;
 
 @Slf4j
 @Validated
@@ -37,6 +37,6 @@ public class CompilationPublicController {
                                                 @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
         log.info("Response from POST request on {}", COMPILATIONS_ADMIN_URI);
-        return compilationService.getCompilations(pined, fromSizePage(from, size));
+        return compilationService.getCompilations(pined, PageRequest.of(from / size, size));
     }
 }

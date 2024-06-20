@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,6 @@ import java.util.List;
 
 import static ru.practicum.ewm.utils.Constants.DATE_FORMAT;
 import static ru.practicum.ewm.utils.Constants.EVENTS_PUBLIC_URI;
-import static ru.practicum.ewm.utils.Utilities.fromSizePage;
 
 @Slf4j
 @Validated
@@ -50,8 +50,7 @@ public class EventPublicController {
         log.info("Response from GET request on {}", EVENTS_PUBLIC_URI);
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd))
             throw new ValidationException("The date of start cannot be after end");
-        return eventService.getPublishedEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
-                fromSizePage(from, size), request);
+        return eventService.getPublishedEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, PageRequest.of(from / size, size), request);
     }
 
     @GetMapping(ID_URI)

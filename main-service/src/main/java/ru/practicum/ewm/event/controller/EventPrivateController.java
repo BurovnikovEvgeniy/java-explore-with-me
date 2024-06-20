@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +31,6 @@ import java.util.List;
 import static ru.practicum.ewm.utils.Constants.EVENTS_PRIVATE_URI;
 import static ru.practicum.ewm.utils.Constants.EVENT_ID_REQUESTS_URI;
 import static ru.practicum.ewm.utils.Constants.EVENT_ID_URI;
-import static ru.practicum.ewm.utils.Utilities.checkEventStart;
-import static ru.practicum.ewm.utils.Utilities.fromSizePage;
 
 @Slf4j
 @Validated
@@ -46,7 +45,7 @@ public class EventPrivateController {
     public FullEventDto addEvent(@RequestBody @Valid NewEventDto newEventDTO,
                                  @PathVariable @Positive Long userId) {
         log.info("Response from POST request on {}", EVENTS_PRIVATE_URI);
-        if (newEventDTO.getEventDate() != null) checkEventStart(newEventDTO.getEventDate());
+//        if (newEventDTO.getEventDate() != null) checkEventStart(newEventDTO.getEventDate());
         if (newEventDTO.getPaid() == null) newEventDTO.setPaid(false);
         if (newEventDTO.getParticipantLimit() == null) newEventDTO.setParticipantLimit(0L);
         if (newEventDTO.getRequestModeration() == null) newEventDTO.setRequestModeration(true);
@@ -65,7 +64,7 @@ public class EventPrivateController {
                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                             @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Response from GET request on {}", EVENTS_PRIVATE_URI);
-        return eventService.getAllEvents(userId, fromSizePage(from, size));
+        return eventService.getAllEvents(userId, PageRequest.of(from / size, size));
     }
 
     @PatchMapping(EVENT_ID_URI)
@@ -73,7 +72,7 @@ public class EventPrivateController {
                                     @PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId) {
         log.info("Response from PATCH request on {}{}", EVENTS_PRIVATE_URI, EVENT_ID_URI);
-        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
+//        if (updateEventDTO.getEventDate() != null) checkEventStart(updateEventDTO.getEventDate());
         return eventService.updateEvent(updateEventDTO, userId, eventId);
     }
 
