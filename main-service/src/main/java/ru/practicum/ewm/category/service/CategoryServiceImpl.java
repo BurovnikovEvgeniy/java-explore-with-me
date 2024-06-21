@@ -22,7 +22,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
-    @Transactional
     public CategoryDto addCategory(NewCategoryDto newCategoryDTO) {
         Category category = categoryRepository.save(categoryMapper.toCategory(newCategoryDTO));
         return categoryMapper.toCategoryDto(category);
@@ -38,10 +37,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
-        Category category = getCategoryIfExist(catId);
+        if (!categoryRepository.existsById(catId)) {
+            throw new NotFoundException("");
+        }
+        Category category = categoryRepository.findById(catId).get();
         category.setName(newCategoryDto.getName());
-        Category updatedCategory = categoryRepository.save(category);
-        return categoryMapper.toCategoryDto(updatedCategory);
+        return categoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
     @Override
