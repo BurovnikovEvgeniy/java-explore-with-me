@@ -30,7 +30,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void deleteCategory(Long catId) {
-        getCategoryIfExist(catId);
+        if (!categoryRepository.existsById(catId)) {
+            throw new NotFoundException("Категория с id=" + catId + " не найдена");
+        }
         categoryRepository.deleteById(catId);
     }
 
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
         if (!categoryRepository.existsById(catId)) {
-            throw new NotFoundException("");
+            throw new NotFoundException("Категория с id=" + catId + " не найдена");
         }
         Category category = categoryRepository.findById(catId).get();
         category.setName(newCategoryDto.getName());
