@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public FullCommentDto addComment(NewCommentDto newCommentDTO, Long userId, Long eventId) {
         Event event = getEventIfExist(eventId);
-        if (!PUBLISHED.equals(event.getState())){
+        if (!PUBLISHED.equals(event.getState())) {
             throw new ConflictException("Нельзя добавить комментарий к неопубликованному событию");
         }
         User user = getUserIfExist(userId);
